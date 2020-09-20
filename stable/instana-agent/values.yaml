@@ -65,6 +65,13 @@ agent:
   configuration_yaml: |
     # Place agent configuration here
 
+  # These are additional backends the Instana agent will report to besides
+  # the one configured via the `agent.endpointHost`, `agent.endpointPort` and `agent.key` setting
+  additionalBackends: []
+    # - endpointHost: ingress.instana.io
+    #   endpointPort: 443
+    #   key: <agent_key>
+
   # agent.redactKubernetesSecrets sets the INSTANA_KUBERNETES_REDACT_SECRETS environment variable.
   # redactKubernetesSecrets: null
 
