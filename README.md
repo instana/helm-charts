@@ -1,7 +1,9 @@
 # Instana Helm Charts
 
 This repository hosts the source of the Instana helm charts.
-For now, it hosts just the `instana-agent` chart, formerly [hosted on Helm Hub](https://github.com/helm/charts).
+For now, it hosts just the `instana-agent` chart, formerly [hosted on Helm Hub](https://github.com/helm/charts), but we may move in sources of additional Helm charts as they become available.
+
+You find these Helm charts on [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/instana)](https://artifacthub.io/packages/search?repo=instana)
 
 ## How to use these Charts
 
