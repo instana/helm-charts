@@ -1,4 +1,4 @@
-{{- if .Values.agent.key -}}
+{{- if or .Values.agent.key .Values.agent.keysSecret -}}
 {{- if or .Values.zone.name .Values.cluster.name -}}
 apiVersion: apps/v1
 kind: DaemonSet
@@ -64,25 +64,17 @@ spec:
             - name: INSTANA_AGENT_MODE
               value: {{ .Values.agent.mode | quote }}
             {{- end }}
-            {{- $agentKey := required "The parameter 'agent.key' is required" .Values.agent.key }}
-            {{- $downloadKey := .Values.agent.downloadKey }}
-            {{- if .Values.agent.keysSecret }}
-            {{- $keysSecret := lookup "v1" "Secret" .Release.Namespace .Values.agent.keysSecret }}
-            {{- $agentKey := required "The secret passed to 'keySecrets' must contain a field called 'key'" $keysSecret.data.key }}
-            {{- $downloadKey := $keysSecret.data.downloadKey }}
-            {{- end }}
             - name: INSTANA_AGENT_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ template "instana-agent.keysSecretName" . }}
                   key: key
-            {{- if $downloadKey }}
             - name: INSTANA_DOWNLOAD_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ template "instana-agent.keysSecretName" . }}
                   key: downloadKey
-            {{- end }}
+                  optional: true
             {{- if .Values.agent.proxyHost }}
             - name: INSTANA_AGENT_PROXY_HOST
               value: {{ .Values.agent.proxyHost | quote }}

@@ -235,14 +235,20 @@ _Note:_ This Helm Chart does not support configuring [Multiple Configuration Fil
 In case you have automation that creates secrets for you, it may not be desirable for this Helm chart to create a secret containing the `agent.key` and `agent.downloadKey`.
 In this case, you can instead specify the name of an alread-existing secret in the namespace in which you install the Instana agent that carries the agent key and download key.
 
-The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called _downloadKey_, which would contain the value you would otherwise set to `agent.downloadKey`.
+The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called `downloadKey`, which would contain the value you would otherwise set to `agent.downloadKey`.
 
 ## Changelog
+
+### v1.1.5
+
+Restore compatibility with Helm 2 that was broken in v1.1.4 by the usage of the `lookup` function, a function actually introduced only with Helm 3.1.
+Coincidentally, this has been an _excellent_ opportunity to introduce `helm lint` to our validation pipeline and end-to-end tests with Helm 2 ;-)
 
 ### v1.1.4
 
 * Bring-your-own secret for agent keys: using the new `agent.keysSecret` setting, you can specify the name of the secret that contains the agent key and, optionally, the download key; refer to [Bring your own Keys secret](#bring-your-own-keys-secret) for more details.
 * Add support for affinities for the instana agent pod via the `agent.pod.affinity` setting.
+* Put some love into the ArtifactHub.io metadata; likely to add some more improvements related to this over time.
 
 ### v1.1.3
 
