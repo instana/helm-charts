@@ -52,6 +52,17 @@ The name of the PodSecurityPolicy used.
 {{- end -}}
 
 {{/*
+Prints out the name of the secret to use to retrieve the agent key
+*/}}
+{{- define "instana-agent.keysSecretName" -}}
+{{- if .Values.agent.keysSecret -}}
+{{ .Values.agent.keysSecret }}
+{{- else -}}
+{{ template "instana-agent.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Add Helm metadata to resource labels.
 */}}
 {{- define "instana-agent.commonLabels" -}}

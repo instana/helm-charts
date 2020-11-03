@@ -1,3 +1,12 @@
+annotations:
+  artifacthub.io/images: |
+    - name: Stan
+      image: https://agents.instana.io/helm/stan-logo-2020.png
+  artifacthub.io/links: |-
+    - name: Instana website
+      url: https://www.instana.com
+    - name: Instana Helm charts
+      url: https://github.com/instana/helm-charts
 apiVersion: v1
 appVersion: 1.189.0
 description: Instana Agent for Kubernetes
@@ -23,4 +32,4 @@ maintainers:
 name: instana-agent
 sources:
 - https://github.com/instana/instana-agent-docker
-version: 1.1.3
+version: 1.1.4

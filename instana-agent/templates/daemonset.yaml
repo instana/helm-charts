@@ -60,20 +60,27 @@ spec:
               value: {{ .Values.agent.endpointHost | quote }}
             - name: INSTANA_AGENT_ENDPOINT_PORT
               value: {{ .Values.agent.endpointPort | quote }}
-            - name: INSTANA_AGENT_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "instana-agent.fullname" . }}
-                  key: key
             {{- if .Values.agent.mode }}
             - name: INSTANA_AGENT_MODE
               value: {{ .Values.agent.mode | quote }}
             {{- end }}
-            {{- if .Values.agent.downloadKey }}
+            {{- $agentKey := required "The parameter 'agent.key' is required" .Values.agent.key }}
+            {{- $downloadKey := .Values.agent.downloadKey }}
+            {{- if .Values.agent.keysSecret }}
+            {{- $keysSecret := lookup "v1" "Secret" .Release.Namespace .Values.agent.keysSecret }}
+            {{- $agentKey := required "The secret passed to 'keySecrets' must contain a field called 'key'" $keysSecret.data.key }}
+            {{- $downloadKey := $keysSecret.data.downloadKey }}
+            {{- end }}
+            - name: INSTANA_AGENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "instana-agent.keysSecretName" . }}
+                  key: key
+            {{- if $downloadKey }}
             - name: INSTANA_DOWNLOAD_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "instana-agent.fullname" . }}
+                  name: {{ template "instana-agent.keysSecretName" . }}
                   key: downloadKey
             {{- end }}
             {{- if .Values.agent.proxyHost }}
@@ -196,6 +203,10 @@ spec:
       {{- if .Values.agent.pod.tolerations }}
       tolerations:
         {{- toYaml .Values.agent.pod.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.agent.pod.affinity }}
+      affinity:
+        {{- toYaml .Values.agent.pod.affinity | nindent 8 }}
       {{- end }}
       volumes:
         - name: dev
