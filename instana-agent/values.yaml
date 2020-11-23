@@ -47,6 +47,11 @@ agent:
     # If you want no imagePullSecrets to be specified in the agent pod, you can just pass an empty array to `agent.image.pullSecrets`
     # pullSecrets: []
 
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+
   pod:
     # agent.pod.annotations are additional annotations to be added to the agent pods.
     annotations: {}

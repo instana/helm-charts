@@ -182,6 +182,8 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.image.pullSecrets`          | Image pull secrets; if not specified (default) _and_ `agent.image.name` starts with `containers.instana.io`, it will be automatically set to `[{ "name": "containers-instana-io" }]` to match the default secret created in this case. | `nil`                                                                                                    |
 | `agent.listenAddress`              | List of addresses to listen on, or "*" for all interfaces               | `nil`                                                                                                       |
 | `agent.mode`                       | Agent mode. Supported values are `APM`, `INFRASTRUCTURE`, `AWS`         | `APM`                                                                                                 |
+| `agent.updateStrategy.type`        | [Daemonet update strategy type](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/); valid values are `OnDelete` and `RollingUpdate` | `RollingUpdate` |
+| `agent.updateStrategy.rollingUpdate.maxUnavailable` | How many agent pods can be updated at once; this value is ignored if `agent.updateStrategy.type` is different than `RollingUpdate` | `1` |
 | `agent.pod.annotations`            | Additional annotations to apply to the pod                              | `{}`                                                                                                        |
 | `agent.pod.limits.cpu`             | Container cpu limits in cpu cores                                       | `1.5`                                                                                                       |
 | `agent.pod.limits.memory`          | Container memory limits in MiB                                          | `512`                                                                                                       |
@@ -238,6 +240,12 @@ In this case, you can instead specify the name of an alread-existing secret in t
 The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called `downloadKey`, which would contain the value you would otherwise set to `agent.downloadKey`.
 
 ## Changelog
+
+### v1.1.6
+
+* Allow to use user-specified memony measurement units in `agent.pod.requests.memory` and `agent.pod.limits.memory`.
+  If the value set is numerical, the Chart will assume it to be expressed in `Mi` for backwards compatibility.
+* Exposed `agent.updateStrategy.type` and `agent.updateStrategy.rollingUpdate.maxUnavailable` settings.
 
 ### v1.1.5
 

@@ -11,6 +11,12 @@ spec:
   selector:
     matchLabels:
       {{- include "instana-agent.selectorLabels" . | nindent 6 }}
+  updateStrategy:
+    type: {{ .Values.agent.updateStrategy.type }}
+    {{- if eq .Values.agent.updateStrategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.agent.updateStrategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
   template:
     metadata:
       labels:
@@ -162,10 +168,10 @@ spec:
             timeoutSeconds: 3
           resources:
             requests:
-              memory: "{{ default 512 .Values.agent.pod.requests.memory }}Mi"
+              memory: "{{ dict "memory" (default 512 .Values.agent.pod.requests.memory) | include "ensureMemoryMeasurement" }}"
               cpu: {{ default 0.5 .Values.agent.pod.requests.cpu }}
             limits:
-              memory: "{{ default 512 .Values.agent.pod.limits.memory }}Mi"
+              memory: "{{ dict "memory" (default 512 .Values.agent.pod.limits.memory) | include "ensureMemoryMeasurement" }}"
               cpu: {{ default 1.5 .Values.agent.pod.limits.cpu }}
           ports:
             - containerPort: 42699
