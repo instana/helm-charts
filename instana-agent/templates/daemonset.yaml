@@ -26,6 +26,7 @@ spec:
         {{- toYaml .Values.agent.pod.annotations | nindent 8 }}
       {{- end }}
         # To ensure that changes to agent.configuration_yaml or agent.additional_backends trigger a Pod recreation, we keep a SHA here
+        # Unfortunately, we cannot use the lookup function to check on the values in the configmap, otherwise we break Helm < 3.2
         instana-configuration-hash: {{ .Values.agent.configuration_yaml | cat ";" | cat ( join "," .Values.agent.additionalBackends ) | sha1sum }}
     spec:
       {{- if .Values.agent.pod.nodeSelector }}
@@ -58,10 +59,11 @@ spec:
               value: {{ .Values.leaderElector.port | quote }}
             - name: INSTANA_ZONE
               value: {{ .Values.zone.name | quote }}
-              {{- if .Values.cluster.name }}
             - name: INSTANA_KUBERNETES_CLUSTER_NAME
-              value: {{ .Values.cluster.name | quote }}
-              {{- end }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "instana-agent.fullname" . }}
+                  key: cluster_name
             - name: INSTANA_AGENT_ENDPOINT
               value: {{ .Values.agent.endpointHost | quote }}
             - name: INSTANA_AGENT_ENDPOINT_PORT

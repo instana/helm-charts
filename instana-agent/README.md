@@ -241,6 +241,11 @@ The secret you specify The secret you specify _must_ have a field called `key`, 
 
 ## Changelog
 
+### v1.1.7
+
+* Store the cluster name in a new `cluster-name` entry of the `instana-agent` ConfigMap rather than directly as the value of the `INSTANA_KUBERNETES_CLUSTER_NAME`, so that you can edit the cluster name in the ConfigMap in deployments like VMware Tanzu Kubernetes Grid in which, when installing the Instana agent over the [Instana tile](https://www.instana.com/docs/setup_and_manage/host_agent/on/vmware_tanzu), you do not have directly control to the configuration of the cluster name.
+If you edit the ConfigMap, you will need to delete the `instana-agent` pods for its new value to take effect.
+
 ### v1.1.6
 
 * Allow to use user-specified memony measurement units in `agent.pod.requests.memory` and `agent.pod.limits.memory`.
