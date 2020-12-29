@@ -12,7 +12,7 @@ Kubernetes 1.9.x - 1.18.x
 
 ### Helm 3 prerequisites
 
-Working `helm` with the `stable` repo added to your helm client.
+Working `helm` with the `https://agents.instana.io/helm` repo added to your helm client.
 
 ### Helm 2 prerequisites
 
@@ -78,13 +78,15 @@ The snippet above configures the agent to report to two additional backends.
 The same effect as the above can be accomplished via the command line via:
 
 ```sh
-$ helm install -n instana-agent instana-agent stable/instana-agent ... \
+$ helm install -n instana-agent instana-agent ... \
+    --repo https://agents.instana.io/helm \
     --set 'agent.additionalBackends[0].endpointHost=my-instana.instana.io' \
     --set 'agent.additionalBackends[0].endpointPort=443' \
     --set 'agent.additionalBackends[0].key=ABCDEFG' \
     --set 'agent.additionalBackends[1].endpointHost=another-instana.instana.io' \
     --set 'agent.additionalBackends[1].endpointPort=1444' \
-    --set 'agent.additionalBackends[1].key=LMNOPQR'
+    --set 'agent.additionalBackends[1].key=LMNOPQR' \
+    instana-agent
 ```
 
 _Note:_ There is no hard limitation on the number of backends an Instana agent can report to, although each comes at the cost of a slight increase in CPU and memory consumption.
@@ -127,10 +129,11 @@ To install the chart with the release name `instana-agent` and set the values on
 
 ```bash
 $ helm install instana-agent --namespace instana-agent \
+--repo https://agents.instana.io/helm \
 --set agent.key=INSTANA_AGENT_KEY \
 --set agent.endpointHost=HOST \
 --set zone.name=ZONE_NAME \
-stable/instana-agent
+instana-agent
 ```
 
 #### Installing with Helm 2
@@ -139,10 +142,11 @@ To install the chart with the release name `instana-agent` and set the values on
 
 ```bash
 $ helm install --name instana-agent --namespace instana-agent \
+--repo https://agents.instana.io/helm \
 --set agent.key=INSTANA_AGENT_KEY \
 --set agent.endpointHost=HOST \
 --set zone.name=ZONE_NAME \
-stable/instana-agent
+instana-agent
 ```
 
 ## Uninstalling the Chart
@@ -240,6 +244,11 @@ In this case, you can instead specify the name of an alread-existing secret in t
 The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called `downloadKey`, which would contain the value you would otherwise set to `agent.downloadKey`.
 
 ## Changelog
+
+### v1.1.8
+
+* Update the README to replace all references of `stable/instana-agent` with specifically setting the repo flag to `https://agents.instana.io/helm`.
+* Add support for TKGI and PKS systems, providing a workaround for the [unexpected Docker socket location](https://github.com/cloudfoundry-incubator/kubo-release/issues/329).
 
 ### v1.1.7
 

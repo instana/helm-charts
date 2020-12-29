@@ -139,6 +139,8 @@ spec:
               mountPath: /run
             - name: var-run
               mountPath: /var/run
+            - name: var-run-kubo
+              mountPath: /var/vcap/sys/run/docker
             - name: sys
               mountPath: /sys
             - name: var-log
@@ -218,6 +220,13 @@ spec:
         - name: var-run
           hostPath:
             path: /var/run
+        # Systems based on the kubo BOSH release (that is, VMware TKGI and older PKS) do not keep the Docker
+        # socket in /var/run/docker.sock , but rather in /var/vcap/sys/run/docker/docker.sock .
+        # The Agent images will check if there is a Docker socket here and, if so, adjust the symlinking before
+        # starting the Agent. See https://github.com/cloudfoundry-incubator/kubo-release/issues/329
+        - name: var-run-kubo
+          hostPath:
+            path: /var/vcap/sys/run/docker
         - name: sys
           hostPath:
             path: /sys
