@@ -68,7 +68,7 @@ Add Helm metadata to resource labels.
 {{- define "instana-agent.commonLabels" -}}
 app.kubernetes.io/name: {{ include "instana-agent.name" . }}
 app.kubernetes.io/version: {{ .Chart.Version }}
-{{ if not .Values.templating -}}
+{{- if not .Values.templating }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ include "instana-agent.chart" . }}

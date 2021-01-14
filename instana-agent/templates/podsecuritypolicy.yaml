@@ -1,5 +1,6 @@
-{{- if .Values.rbac.create -}}
-{{- if (and .Values.podSecurityPolicy.enable (not .Values.podSecurityPolicy.name)) -}}
+{{- if .Values.rbac.create }}
+{{- if (and .Values.podSecurityPolicy.enable (not .Values.podSecurityPolicy.name)) }}
+---
 kind: PodSecurityPolicy
 apiVersion: policy/v1beta1
 metadata:
@@ -51,5 +52,5 @@ spec:
     rule: "RunAsAny"
   fsGroup:
     rule: "RunAsAny"
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

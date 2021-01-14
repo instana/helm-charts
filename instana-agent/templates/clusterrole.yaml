@@ -1,4 +1,5 @@
-{{- if .Values.rbac.create -}}
+{{- if .Values.rbac.create }}
+---
 kind: ClusterRole
 {{- if .Values.agent.supportOpenshift }}
 apiVersion: v1
@@ -66,5 +67,5 @@ rules:
   verbs:     ["use"]
   resourceNames:
   - {{ template "instana-agent.podSecurityPolicyName" . }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

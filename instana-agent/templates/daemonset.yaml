@@ -1,5 +1,6 @@
-{{- if or .Values.agent.key .Values.agent.keysSecret -}}
-{{- if or .Values.zone.name .Values.cluster.name -}}
+{{- if or .Values.agent.key .Values.agent.keysSecret }}
+{{- if or .Values.zone.name .Values.cluster.name }}
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -256,5 +257,5 @@ spec:
             name: {{ $fullname }}
         {{- end }}
         {{- end }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
