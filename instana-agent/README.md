@@ -50,8 +50,7 @@ Instana needs to know how to name your Kubernetes cluster and, optionally, how t
 * `zone.name`
 * `cluster.name`
 
-Either `zone.name` or `cluster.name` are required.
-If you omit `cluster.name`, the value of `zone.name` will be used as cluster name as well.
+`cluster.name` is required.
 If you omit `zone.name`, the host zone will be automatically determined by the availability zone information provided by the [supported Cloud providers](https://www.instana.com/docs/setup_and_manage/cloud_service_agents).
 
 ### Optional Settings
@@ -132,7 +131,7 @@ $ helm install instana-agent --namespace instana-agent \
 --repo https://agents.instana.io/helm \
 --set agent.key=INSTANA_AGENT_KEY \
 --set agent.endpointHost=HOST \
---set zone.name=ZONE_NAME \
+--set cluster.name=CLUSTER_NAME \
 instana-agent
 ```
 
@@ -145,7 +144,7 @@ $ helm install --name instana-agent --namespace instana-agent \
 --repo https://agents.instana.io/helm \
 --set agent.key=INSTANA_AGENT_KEY \
 --set agent.endpointHost=HOST \
---set zone.name=ZONE_NAME \
+--set cluster.name=CLUSTER_NAME \
 instana-agent
 ```
 
@@ -204,7 +203,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.pod.affinity`               | Affinity for pod assignment                                             | `{}` |
 | `agent.env`                        | Additional environment variables for the agent                          | `{}` |
 | `agent.redactKubernetesSecrets`    | Enable additional secrets redaction for selected Kubernetes resources   | `nil` See [Kubernetes secrets](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#secrets) for more details.   |
-| `cluster.name`                     | Display name of the monitored cluster                                   | Value of `zone.name`                                                                                        |
+| `cluster.name`                     | Display name of the monitored cluster                                   | `nil`                                                                                   |
 | `leaderElector.port`               | Instana leader elector sidecar port                                     | `42655`                                                                                                     |
 | `leaderElector.image.name`         | The elector image name to pull                                          | `instana/leader-elector`                                                                                             |
 | `leaderElector.image.tag`          | The elector image tag to pull                                           | `0.5.4`                                                                                                    |
@@ -213,7 +212,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
 | `serviceAccount.create`            | Whether a ServiceAccount should be created                              | `true`                                                                                                      |
 | `serviceAccount.name`              | Name of the ServiceAccount to use                                       | `instana-agent`                                                                                             |
-| `zone.name`                        | Zone that detected technologies will be assigned to                     | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installing-the-chart) for details |
+| `zone.name`                        | Zone that detected technologies will be assigned to                     | `nil` |
 
 #### Development and debugging options
 
