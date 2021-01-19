@@ -116,9 +116,6 @@ spec:
             - name: INSTANA_KUBERNETES_REDACT_SECRETS
               value: {{ .Values.agent.redactKubernetesSecrets | quote }}
             {{- end }}
-            - name: JAVA_OPTS
-              # Approximately 1/3 of container memory requests to allow for direct-buffer memory usage and JVM overhead
-              value: "-Xmx{{ div (default 512 .Values.agent.pod.requests.memory) 3 }}M -XX:+ExitOnOutOfMemoryError"
             - name: INSTANA_AGENT_POD_NAME
               valueFrom:
                 fieldRef:
@@ -140,8 +137,10 @@ spec:
               mountPath: /run
             - name: var-run
               mountPath: /var/run
+{{- if not .Values.openshift }}
             - name: var-run-kubo
               mountPath: /var/vcap/sys/run/docker
+{{- end }}
             - name: sys
               mountPath: /sys
             - name: var-log
@@ -173,10 +172,10 @@ spec:
             timeoutSeconds: 3
           resources:
             requests:
-              memory: "{{ dict "memory" (default 512 .Values.agent.pod.requests.memory) | include "ensureMemoryMeasurement" }}"
+              memory: "{{ dict "memory" (default "512Mi" .Values.agent.pod.requests.memory) | include "ensureMemoryMeasurement" }}"
               cpu: {{ default 0.5 .Values.agent.pod.requests.cpu }}
             limits:
-              memory: "{{ dict "memory" (default 512 .Values.agent.pod.limits.memory) | include "ensureMemoryMeasurement" }}"
+              memory: "{{ dict "memory" (default "512Mi" .Values.agent.pod.limits.memory) | include "ensureMemoryMeasurement" }}"
               cpu: {{ default 1.5 .Values.agent.pod.limits.cpu }}
           ports:
             - containerPort: 42699
@@ -194,7 +193,7 @@ spec:
           resources:
             requests:
               cpu: 0.1
-              memory: 64Mi
+              memory: "64Mi"
           livenessProbe:
             httpGet: # Leader elector liveness is tied to agent, published on localhost:42699
               path: /com.instana.agent.coordination.sidecar/health
@@ -221,6 +220,7 @@ spec:
         - name: var-run
           hostPath:
             path: /var/run
+{{- if not .Values.openshift }}
         # Systems based on the kubo BOSH release (that is, VMware TKGI and older PKS) do not keep the Docker
         # socket in /var/run/docker.sock , but rather in /var/vcap/sys/run/docker/docker.sock .
         # The Agent images will check if there is a Docker socket here and, if so, adjust the symlinking before
@@ -228,6 +228,7 @@ spec:
         - name: var-run-kubo
           hostPath:
             path: /var/vcap/sys/run/docker
+{{- end }}
         - name: sys
           hostPath:
             path: /sys

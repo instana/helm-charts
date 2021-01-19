@@ -1,11 +1,7 @@
-{{- if .Values.rbac.create }}
+{{- if or .Values.rbac.create .Values.openshift }}
 ---
 kind: ClusterRole
-{{- if .Values.agent.supportOpenshift }}
-apiVersion: v1
-{{- else }}
 apiVersion: rbac.authorization.k8s.io/v1
-{{- end }}
 metadata:
   name: {{ template "instana-agent.fullname" . }}
   labels:
@@ -15,6 +11,10 @@ rules:
     - "/version"
     - "/healthz"
   verbs: ["get"]
+{{- if .Values.openshift }}
+  apiGroups: []
+  resources: []
+{{- end }}
 - apiGroups: ["batch"]
   resources:
     - "jobs"
@@ -55,11 +55,15 @@ rules:
   resources:
     - "ingresses"
   verbs: ["get", "list", "watch"]
-{{- if .Values.agent.supportOpenshift }}
+{{- if .Values.openshift }}
 - apiGroups: ["apps.openshift.io"]
   resources:
     - "deploymentconfigs"
   verbs: ["get", "list", "watch"]
+- apiGroups: ["security.openshift.io"]
+  resourceNames: ["privileged"]
+  resources: ["securitycontextconstraints"]
+  verbs: ["use"]
 {{- end -}}
 {{- if .Values.podSecurityPolicy.enable}}
 - apiGroups: ["policy"]

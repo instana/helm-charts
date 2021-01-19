@@ -1,28 +1,37 @@
 # Instana
 
-Instana is an [APM solution](https://www.instana.com/) built for microservices that enables IT Ops to build applications faster and deliver higher quality services by automating monitoring, tracing and root cause analysis. This solution is optimized for [Kubernetes](https://www.instana.com/automatic-kubernetes-monitoring/).
+Instana is an [APM solution](https://www.instana.com/) built for microservices that enables IT Ops to build applications faster and deliver higher quality services by automating monitoring, tracing and root cause analysis.
+This solution is optimized for [Kubernetes](https://www.instana.com/automatic-kubernetes-monitoring/).
 
-## Introduction
-
-This chart adds the Instana Agent to all schedulable nodes in your cluster via a `DaemonSet`.
+This chart adds the Instana Agent to all schedulable nodes in your cluster via a privileged `DaemonSet` and accompanying resources like `ConfigurationMap`s, `Secret`s and RBAC settings.
 
 ## Prerequisites
 
-Kubernetes 1.9.x - 1.18.x
+* Kubernetes 1.9.x - 1.18.x OR OpenShift 4.x
+* Helm 3
 
-### Helm 3 prerequisites
-
-Working `helm` with the `https://agents.instana.io/helm` repo added to your helm client.
-
-### Helm 2 prerequisites
-
-Working `helm` and `tiller`.
-
-_Note:_ Tiller may need a service account and role binding if RBAC is enabled in your cluster.
-
-## Installing the Chart
+## Installation
 
 To configure the installation you can either specify the options on the command line using the **--set** switch, or you can edit **values.yaml**.
+
+First, create a namespace for the instana-agent
+
+```bash
+kubectl create namespace instana-agent
+```
+
+To install the chart with the release name `instana-agent` and set the values on the command line run:
+
+```bash
+$ helm install instana-agent --namespace instana-agent \
+--repo https://agents.instana.io/helm \
+--set agent.key=INSTANA_AGENT_KEY \
+--set agent.endpointHost=HOST \
+--set zone.name=ZONE_NAME \
+instana-agent
+```
+
+**OpenShift:** When targetting an OpenShift 4.x cluster, add `--set openshift=true`.
 
 ### Required Settings
 
@@ -43,7 +52,7 @@ The download key is set via the following value:
 
 * `agent.downloadKey`
 
-### Zone and Cluster
+#### Zone and Cluster
 
 Instana needs to know how to name your Kubernetes cluster and, optionally, how to group your Instana agents in [Custom zones](https://www.instana.com/docs/setup_and_manage/host_agent/configuration/#custom-zones) using the following fields:
 
@@ -54,120 +63,15 @@ Either `zone.name` or `cluster.name` are required.
 If you omit `cluster.name`, the value of `zone.name` will be used as cluster name as well.
 If you omit `zone.name`, the host zone will be automatically determined by the availability zone information provided by the [supported Cloud providers](https://www.instana.com/docs/setup_and_manage/cloud_service_agents).
 
-### Optional Settings
-
-#### Configuring Additional Backends
-
-You may want to have your Instana agents report to multiple backends.
-The first backend must be configured as shown in the [Configuring the Instana Backend](#configuring-the-instana-backend); every backend after the first, is configured in the `agent.additionalBackends` list in the [values.yaml](values.yaml) as follows:
-
-```yaml
-agent:
-  additionalBackends:
-  # Second backend
-  - endpointHost: my-instana.instana.io # endpoint host; e.g., my-instana.instana.io
-    endpointPort: 443 # default is 443, so this line could be omitted
-    key: ABCDEFG # agent key for this backend
-  # Third backend
-  - endpointHost: another-instana.instana.io # endpoint host; e.g., my-instana.instana.io
-    endpointPort: 1444 # default is 443, so this line could be omitted
-    key: LMNOPQR # agent key for this backend
-```
-
-The snippet above configures the agent to report to two additional backends.
-The same effect as the above can be accomplished via the command line via:
-
-```sh
-$ helm install -n instana-agent instana-agent ... \
-    --repo https://agents.instana.io/helm \
-    --set 'agent.additionalBackends[0].endpointHost=my-instana.instana.io' \
-    --set 'agent.additionalBackends[0].endpointPort=443' \
-    --set 'agent.additionalBackends[0].key=ABCDEFG' \
-    --set 'agent.additionalBackends[1].endpointHost=another-instana.instana.io' \
-    --set 'agent.additionalBackends[1].endpointPort=1444' \
-    --set 'agent.additionalBackends[1].key=LMNOPQR' \
-    instana-agent
-```
-
-_Note:_ There is no hard limitation on the number of backends an Instana agent can report to, although each comes at the cost of a slight increase in CPU and memory consumption.
-
-#### Configuring a Proxy between the Instana agents and the Instana backend
-
-If your infrastructure uses a proxy, you should ensure that you set values for:
-
-* `agent.pod.proxyHost`
-* `agent.pod.proxyPort`
-* `agent.pod.proxyProtocol`
-* `agent.pod.proxyUser`
-* `agent.pod.proxyPassword`
-* `agent.pod.proxyUseDNS`
-
-#### Configuring which Networks the Instana Agent should listen on
-
-If your infrastructure has multiple networks defined, you might need to allow the agent to listen on all addresses (typically with value set to `*`):
-
-* `agent.listenAddress`
-
-#### Agent Modes
-
-Agent can have either APM or INFRASTRUCTURE.
-Default is APM and if you want to override that, ensure you set value:
-
-* `agent.mode`
-
-For more information on agent modes, refer to the [Host Agent Modes](https://www.instana.com/docs/setup_and_manage/host_agent#host-agent-modes) documentation.
-
-#### Installing with Helm 3
-
-First, create a namespace for the instana-agent
-
-```bash
-kubectl create namespace instana-agent
-```
-
-To install the chart with the release name `instana-agent` and set the values on the command line run:
-
-```bash
-$ helm install instana-agent --namespace instana-agent \
---repo https://agents.instana.io/helm \
---set agent.key=INSTANA_AGENT_KEY \
---set agent.endpointHost=HOST \
---set zone.name=ZONE_NAME \
-instana-agent
-```
-
-#### Installing with Helm 2
-
-To install the chart with the release name `instana-agent` and set the values on the command line run:
-
-```bash
-$ helm install --name instana-agent --namespace instana-agent \
---repo https://agents.instana.io/helm \
---set agent.key=INSTANA_AGENT_KEY \
---set agent.endpointHost=HOST \
---set zone.name=ZONE_NAME \
-instana-agent
-```
-
-## Uninstalling the Chart
+## Uninstallation
 
 To uninstall/delete the `instana-agent` release:
-
-### Uninstalling with Helm 3
 
 ```bash
 helm del instana-agent -n instana-agent
 ```
 
-### Uninstalling with Helm 2
-
-```bash
-helm del --purge instana-agent
-```
-
-## Configuration
-
-### Helm Chart
+## Configuration Reference
 
 The following table lists the configurable parameters of the Instana chart and their default values.
 
@@ -211,17 +115,20 @@ The following table lists the configurable parameters of the Instana chart and t
 | `podSecurityPolicy.enable`         | Whether a PodSecurityPolicy should be authorized for the Instana Agent pods. Requires `rbac.create` to be `true` as well. | `false` See [PodSecurityPolicy](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#podsecuritypolicy) for more details. |
 | `podSecurityPolicy.name`           | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you. | `nil` |
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
+| `openshift`                        | Whether to install the Helm chart as needed in OpenShift; this setting implies `rbac.create=true` | `false`
+
 | `serviceAccount.create`            | Whether a ServiceAccount should be created                              | `true`                                                                                                      |
 | `serviceAccount.name`              | Name of the ServiceAccount to use                                       | `instana-agent`                                                                                             |
 | `zone.name`                        | Zone that detected technologies will be assigned to                     | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installing-the-chart) for details |
 
-#### Development and debugging options
+### Agent Modes
 
-These options will be rarely used outside of development or debugging of the agent.
+Agent can have either `APM` or `INFRASTRUCTURE`.
+Default is APM and if you want to override that, ensure you set value:
 
-|             Parameter              |            Description                                                  |                    Default                                                                                  |
-|------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `agent.host.repository`            | Host path to mount as the agent maven repository                        | `nil`                                                                                                       |
+* `agent.mode`
+
+For more information on agent modes, refer to the [Host Agent Modes](https://www.instana.com/docs/setup_and_manage/host_agent#host-agent-modes) documentation.
 
 ### Agent Configuration
 
@@ -243,9 +150,79 @@ In this case, you can instead specify the name of an alread-existing secret in t
 
 The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called `downloadKey`, which would contain the value you would otherwise set to `agent.downloadKey`.
 
+### Configuring Additional Backends
+
+You may want to have your Instana agents report to multiple backends.
+The first backend must be configured as shown in the [Configuring the Instana Backend](#configuring-the-instana-backend); every backend after the first, is configured in the `agent.additionalBackends` list in the [values.yaml](values.yaml) as follows:
+
+```yaml
+agent:
+  additionalBackends:
+  # Second backend
+  - endpointHost: my-instana.instana.io # endpoint host; e.g., my-instana.instana.io
+    endpointPort: 443 # default is 443, so this line could be omitted
+    key: ABCDEFG # agent key for this backend
+  # Third backend
+  - endpointHost: another-instana.instana.io # endpoint host; e.g., my-instana.instana.io
+    endpointPort: 1444 # default is 443, so this line could be omitted
+    key: LMNOPQR # agent key for this backend
+```
+
+The snippet above configures the agent to report to two additional backends.
+The same effect as the above can be accomplished via the command line via:
+
+```sh
+$ helm install -n instana-agent instana-agent ... \
+    --repo https://agents.instana.io/helm \
+    --set 'agent.additionalBackends[0].endpointHost=my-instana.instana.io' \
+    --set 'agent.additionalBackends[0].endpointPort=443' \
+    --set 'agent.additionalBackends[0].key=ABCDEFG' \
+    --set 'agent.additionalBackends[1].endpointHost=another-instana.instana.io' \
+    --set 'agent.additionalBackends[1].endpointPort=1444' \
+    --set 'agent.additionalBackends[1].key=LMNOPQR' \
+    instana-agent
+```
+
+_Note:_ There is no hard limitation on the number of backends an Instana agent can report to, although each comes at the cost of a slight increase in CPU and memory consumption.
+
+### Configuring a Proxy between the Instana agents and the Instana backend
+
+If your infrastructure uses a proxy, you should ensure that you set values for:
+
+* `agent.pod.proxyHost`
+* `agent.pod.proxyPort`
+* `agent.pod.proxyProtocol`
+* `agent.pod.proxyUser`
+* `agent.pod.proxyPassword`
+* `agent.pod.proxyUseDNS`
+
+### Configuring which Networks the Instana Agent should listen on
+
+If your infrastructure has multiple networks defined, you might need to allow the agent to listen on all addresses (typically with value set to `*`):
+
+* `agent.listenAddress`
+
+### Development and debugging options
+
+These options will be rarely used outside of development or debugging of the agent.
+
+|             Parameter              |            Description                                                  |                    Default                                                                                  |
+|------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `agent.host.repository`            | Host path to mount as the agent maven repository                        | `nil`                                                                                                       |
+
 ## Changelog
 
-### v1.1.8
+### v1.2.0
+
+* Support OpenShift 4.x: just add `--set openshift=true` to the usual settings, and off you go :-)
+* Restructure documentation for consistency and readability
+* Deprecation: Helm 2 is no longer supported; the minimum Helm API version is now `v2`, which will make Helm 2 refuse to process the chart.
+
+### v1.1.10
+
+* Some linting of the whitespaces in the generated YAML
+
+### v1.1.9
 
 * Update the README to replace all references of `stable/instana-agent` with specifically setting the repo flag to `https://agents.instana.io/helm`.
 * Add support for TKGI and PKS systems, providing a workaround for the [unexpected Docker socket location](https://github.com/cloudfoundry-incubator/kubo-release/issues/329).

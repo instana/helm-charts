@@ -70,12 +70,12 @@ agent:
 
     requests:
       # agent.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
-      memory: 512
+      memory: 512Mi
       # agent.pod.requests.cpu are the requested CPU units allocation for the agent pods.
       cpu: 0.5
     limits:
       # agent.pod.limits.memory set the memory allocation limits in MiB for the agent pods.
-      memory: 512
+      memory: 512Mi
       # agent.pod.limits.cpu sets the CPU units allocation limits for the agent pods.
       cpu: 1.5
 
@@ -108,9 +108,6 @@ agent:
   host:
     repository: null
 
-  # agent.supportOpenshift specifies whether the cluster role should include openshift permissions
-  # supportOpenshift: true
-
 cluster:
   # cluster.name represents the name that will be assigned to this cluster in Instana
   name: null
@@ -122,6 +119,9 @@ leaderElector:
     # leaderElector.image.tag is the tag name of the agent container image.
     tag: 0.5.4
   port: 42655
+
+# openshift specifies whether the cluster role should include openshift permissions and other tweaks to the YAML
+# openshift: true
 
 rbac:
   # Specifies whether RBAC resources should be created

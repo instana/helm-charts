@@ -100,11 +100,9 @@ Ensure a unit of memory measurement is added to the value
 */}}
 {{- define "ensureMemoryMeasurement" }}
 {{- $value := .memory }}
-{{- if kindIs "int" $value }}
-{{- printf "%d%s" $value "Mi" }}
-{{- else if (kindIs "float64" $value) }}
-{{- printf "%f%s" $value "Mi" }}
+{{- if kindIs "string" $value }}
+{{- print $value }}
 {{- else }}
-{{- printf "%s" $value }}
+{{- print ($value | toString) "Mi" }}
 {{- end }}
 {{- end }}
