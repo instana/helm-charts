@@ -212,7 +212,11 @@ These options will be rarely used outside of development or debugging of the age
 
 ## Changelog
 
-### v1.2.0
+### v1.2.3
+
+* Bug fix: Extend the built-in Pod Security Policy to cover the Docker socket mount for Tanzu Kubernetes Grid systems.
+
+### v1.2.1
 
 * Support OpenShift 4.x: just add `--set openshift=true` to the usual settings, and off you go :-)
 * Restructure documentation for consistency and readability
