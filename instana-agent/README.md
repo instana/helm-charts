@@ -224,6 +224,11 @@ These options will be rarely used outside of development or debugging of the age
 
 ## Changelog
 
+### v1.2.4
+
+* Support pinning agent and leader elector image by digest
+* Auto-detect OpenShift clusters: This feature will not work with Helm 3.0 due to the lack of the `lookup` function
+
 ### v1.2.3
 
 * Bug fix: Extend the built-in Pod Security Policy to cover the Docker socket mount for Tanzu Kubernetes Grid systems.
