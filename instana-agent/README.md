@@ -212,7 +212,7 @@ These options will be rarely used outside of development or debugging of the age
 
 ## Changelog
 
-### v1.2.1
+### v1.2.0
 
 * Support OpenShift 4.x: just add `--set openshift=true` to the usual settings, and off you go :-)
 * Restructure documentation for consistency and readability
