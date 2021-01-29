@@ -1,4 +1,4 @@
-{{- if or .Values.rbac.create .Values.openshift }}
+{{- if or .Values.rbac.create (include "is_openshift" .) }}
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

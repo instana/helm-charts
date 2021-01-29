@@ -1,10 +1,11 @@
 {{- if or .Values.agent.key .Values.agent.keysSecret }}
 {{- if or .Values.zone.name .Values.cluster.name }}
+{{- $fullname := include "instana-agent.fullname" . -}}
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ template "instana-agent.fullname" . }}
+  name: {{ $fullname }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "instana-agent.commonLabels" . | nindent 4 }}
@@ -53,7 +54,7 @@ spec:
       {{- end }}
       containers:
         - name: instana-agent
-          image: "{{ .Values.agent.image.name }}:{{ .Values.agent.image.tag }}"
+          image: {{ include "image" .Values.agent.image | quote}}
           imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
           env:
             - name: INSTANA_AGENT_LEADER_ELECTOR_PORT
@@ -137,10 +138,10 @@ spec:
               mountPath: /run
             - name: var-run
               mountPath: /var/run
-{{- if not .Values.openshift }}
+            {{- if not (include "is_openshift" .) }}
             - name: var-run-kubo
               mountPath: /var/vcap/sys/run/docker
-{{- end }}
+            {{- end }}
             - name: sys
               mountPath: /sys
             - name: var-log
@@ -152,13 +153,16 @@ spec:
             - name: configuration
               subPath: configuration.yaml
               mountPath: /root/configuration.yaml
+            {{- if .Values.agent.configuration.autoMountConfigEntries }}
+            {{- include "volumeMountsForConfigFileInConfigMap" . | nindent 12 }}
+            {{- end }}
             {{- if .Values.agent.host.repository }}
             - name: repo
               mountPath: /opt/instana/agent/data/repo
             {{- end }}
             {{- if .Values.agent.additionalBackends }}
             {{- range $index,$backend := .Values.agent.additionalBackends }}
-            {{ $backendIndex :=add $index 2 -}}
+            {{- $backendIndex :=add $index 2 }}
             - name: additional-backend-{{$backendIndex}}
               subPath: additional-backend-{{$backendIndex}}
               mountPath: /opt/instana/agent/etc/instana/com.instana.agent.main.sender.Backend-{{$backendIndex}}.cfg
@@ -180,7 +184,7 @@ spec:
           ports:
             - containerPort: 42699
         - name: instana-agent-leader-elector
-          image: "{{ .Values.leaderElector.image.name }}:{{ .Values.leaderElector.image.tag }}"
+          image: {{ include "image" .Values.leaderElector.image | quote}}
           env:
             - name: INSTANA_AGENT_POD_NAME
               valueFrom:
@@ -220,7 +224,7 @@ spec:
         - name: var-run
           hostPath:
             path: /var/run
-{{- if not .Values.openshift }}
+        {{- if not (include "is_openshift" .) }}
         # Systems based on the kubo BOSH release (that is, VMware TKGI and older PKS) do not keep the Docker
         # socket in /var/run/docker.sock , but rather in /var/vcap/sys/run/docker/docker.sock .
         # The Agent images will check if there is a Docker socket here and, if so, adjust the symlinking before
@@ -228,7 +232,7 @@ spec:
         - name: var-run-kubo
           hostPath:
             path: /var/vcap/sys/run/docker
-{{- end }}
+        {{- end }}
         - name: sys
           hostPath:
             path: /sys
@@ -243,14 +247,13 @@ spec:
             path: /etc/machine-id
         - name: configuration
           configMap:
-            name: {{ template "instana-agent.fullname" . }}
+            name: {{ $fullname }}
         {{- if .Values.agent.host.repository }}
         - name: repo
           hostPath:
             path: {{ .Values.agent.host.repository }}
         {{- end }}
         {{- if .Values.agent.additionalBackends }}
-        {{- $fullname := include "instana-agent.fullname" . -}}
         {{- range $index,$backend := .Values.agent.additionalBackends }}
         {{ $backendIndex :=add $index 2 -}}
         - name: additional-backend-{{$backendIndex}}

@@ -106,3 +106,39 @@ Ensure a unit of memory measurement is added to the value
 {{- print ($value | toString) "Mi" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Composes a container image from a dict containing a "name" field (required), "tag" and "digest" (both optional, if both provided, "digest" has priority)
+*/}}
+{{- define "image" }}
+{{- $name := .name }}
+{{- $tag := .tag }}
+{{- $digest := .digest }}
+{{- if $digest }}
+{{- printf "%s@%s" $name $digest }}
+{{- else if $tag }}
+{{- printf "%s:%s" $name $tag }}
+{{- else }}
+{{- print $name }}
+{{- end }}
+{{- end }}
+
+{{- define "is_openshift" }}
+{{- or (.Values.openshift) (.Capabilities.APIVersions.Has "apps.openshift.io/v1") }}
+{{- end }}
+
+{{- define "volumeMountsForConfigFileInConfigMap" }}
+{{- $configMapName := (include "instana-agent.fullname" .) }}
+{{- $configMapNameSpace := .Release.Namespace }}
+{{- $configMap := tpl ( ( "{{ lookup \"v1\" \"ConfigMap\" \"map-namespace\" \"map-name\" | toYaml }}" | replace "map-namespace" $configMapNameSpace ) | replace "map-name" $configMapName ) . }}
+{{- if $configMap }}
+{{- $configMapObject := $configMap | fromYaml }}
+{{- range $key, $val := $configMapObject.data }}
+{{- if regexMatch "configuration-.*\\.yaml" $key }}
+- name: configuration
+  subPath: {{ $key }}
+  mountPath: /opt/instana/agent/etc/instana/{{ $key }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

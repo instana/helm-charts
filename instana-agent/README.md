@@ -78,6 +78,7 @@ The following table lists the configurable parameters of the Instana chart and t
 |             Parameter              |            Description                                                  |                    Default                                                                                  |
 |------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `agent.configuration_yaml`         | Custom content for the agent configuration.yaml file                    | `nil` See [below](#agent) for more details                                                                  |
+| `agent.configuration.autoMountConfigEntries` | (Experimental, needs Helm 3.1+) Automatically look up the entries of the default `instana-agent` ConfigMap, and mount as agent configuration files in the `instana-agent` container under the `/opt/instana/agent/etc/instana` directory all ConfigMap entries with keys that match the `configuration-*.yaml` scheme. | `false`
 | `agent.endpointHost`               | Instana Agent backend endpoint host                                     | `ingress-red-saas.instana.io` (US and ROW). If in Europe, please override with `ingress-blue-saas.instana.io`                   |
 | `agent.endpointPort`               | Instana Agent backend endpoint port                                     | `443`                                                                                                       |
 | `agent.key`                        | Your Instana Agent key                                                  | `nil` You must provide your own key unless `agent.keysSecret` is specified |
@@ -85,7 +86,8 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.keysSecret`                 | As an alternative to specifying `agent.key` and, optionally, `agent.downloadKey`, you can instead specify the name of the secret in the namespace in which you install the Instana agent that carries the agent key and download key | `nil` Usually not required, see [Bring your own Keys secret](#bring-your-own-keys-secret) for more details |
 | `agent.additionalBackends`         | List of additional backends to report to; it must specify the `endpointHost` and `key` fields, and optionally `endpointPort` | `[]` Usually not required; see [Configuring Additional Backends](#configuring-additional-backends) for more info and examples |
 | `agent.image.name`                 | The image name to pull                                                  | `instana/agent`                                                                                             |
-| `agent.image.tag`                  | The image tag to pull                                                   | `latest`                                                                                                    |
+| `agent.image.digest`               | The image digest to pull; if specified, it causes `agent.image.tag` to be ignored                                       | `nil`                                                                                                    |
+| `agent.image.tag`                  | The image tag to pull; this property is ignored if `agent.image.digest` is specified                                               | `latest`                                                                                                    |
 | `agent.image.pullPolicy`           | Image pull policy                                                       | `Always`                                                                                                    |
 | `agent.image.pullSecrets`          | Image pull secrets; if not specified (default) _and_ `agent.image.name` starts with `containers.instana.io`, it will be automatically set to `[{ "name": "containers-instana-io" }]` to match the default secret created in this case. | `nil`                                                                                                    |
 | `agent.listenAddress`              | List of addresses to listen on, or "*" for all interfaces               | `nil`                                                                                                       |
@@ -111,7 +113,8 @@ The following table lists the configurable parameters of the Instana chart and t
 | `cluster.name`                     | Display name of the monitored cluster                                   | Value of `zone.name`                                                                                        |
 | `leaderElector.port`               | Instana leader elector sidecar port                                     | `42655`                                                                                                     |
 | `leaderElector.image.name`         | The elector image name to pull                                          | `instana/leader-elector`                                                                                             |
-| `leaderElector.image.tag`          | The elector image tag to pull                                           | `0.5.4`                                                                                                    |
+| `leaderElector.image.digest`               | The image digest to pull; if specified, it causes `leaderElector.image.tag` to be ignored                                       | `nil`                                                                                                    |
+| `leaderElector.image.tag`                  | The image tag to pull; this property is ignored if `leaderElector.image.digest` is specified                                               | `latest` |
 | `podSecurityPolicy.enable`         | Whether a PodSecurityPolicy should be authorized for the Instana Agent pods. Requires `rbac.create` to be `true` as well. | `false` See [PodSecurityPolicy](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#podsecuritypolicy) for more details. |
 | `podSecurityPolicy.name`           | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you. | `nil` |
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
@@ -149,6 +152,15 @@ In case you have automation that creates secrets for you, it may not be desirabl
 In this case, you can instead specify the name of an alread-existing secret in the namespace in which you install the Instana agent that carries the agent key and download key.
 
 The secret you specify The secret you specify _must_ have a field called `key`, which would contain the value you would otherwise set to `agent.key`, and _may_ contain a field called `downloadKey`, which would contain the value you would otherwise set to `agent.downloadKey`.
+
+### Configuring Additional Configuration Files
+
+[Multiple configuration files](https://www.instana.com/docs/setup_and_manage/host_agent/configuration#multiple-configuration-files) is a capability of the Instana agent that allows for modularity in its configurations files.
+
+The experimental `agent.configuration.autoMountConfigEntries`, which uses functionality available in Helm 3.1+ to automatically look up the entries of the default `instana-agent` ConfigMap, and mount as agent configuration files in the `instana-agent` container under the `/opt/instana/agent/etc/instana` directory all ConfigMap entries with keys that match the `configuration-*.yaml` scheme.
+
+**IMPORTANT:** Needs Helm 3.1+ as it is built on the `lookup` function
+**IMPORTANT:** Editing the ConfigMap adding keys requires a `helm upgrade` to take effect
 
 ### Configuring Additional Backends
 
@@ -218,9 +230,9 @@ These options will be rarely used outside of development or debugging of the age
 
 ### v1.2.1
 
-* Support OpenShift 4.x: just add `--set openshift=true` to the usual settings, and off you go :-)
+* Support OpenShift 4.x: just add --set openshift=true to the usual settings, and off you go :-)
 * Restructure documentation for consistency and readability
-* Deprecation: Helm 2 is no longer supported; the minimum Helm API version is now `v2`, which will make Helm 2 refuse to process the chart.
+* Deprecation: Helm 2 is no longer supported; the minimum Helm API version is now v2, which will make Helm 2 refuse to process the chart.
 
 ### v1.1.10
 
