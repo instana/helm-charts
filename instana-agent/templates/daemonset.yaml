@@ -138,7 +138,7 @@ spec:
               mountPath: /run
             - name: var-run
               mountPath: /var/run
-            {{- if not (include "is_openshift" .) }}
+            {{- if not (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
             - name: var-run-kubo
               mountPath: /var/vcap/sys/run/docker
             {{- end }}
@@ -224,7 +224,7 @@ spec:
         - name: var-run
           hostPath:
             path: /var/run
-        {{- if not (include "is_openshift" .) }}
+        {{- if not (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
         # Systems based on the kubo BOSH release (that is, VMware TKGI and older PKS) do not keep the Docker
         # socket in /var/run/docker.sock , but rather in /var/vcap/sys/run/docker/docker.sock .
         # The Agent images will check if there is a Docker socket here and, if so, adjust the symlinking before

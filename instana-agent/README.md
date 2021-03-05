@@ -223,6 +223,10 @@ These options will be rarely used outside of development or debugging of the age
 
 ## Changelog
 
+### v1.2.6
+
+* Fix bug that might cause some OpenShift-specific resources to be created in other flavours of Kubernetes.
+
 ### v1.2.5
 
 * Introduce the `instana-agent:instana-agent` Kubernetes service that allows you to talk to the Instana agent on the same node.

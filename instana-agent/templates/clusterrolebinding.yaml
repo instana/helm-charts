@@ -1,4 +1,4 @@
-{{- if or .Values.rbac.create (include "is_openshift" .) }}
+{{- if or .Values.rbac.create (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

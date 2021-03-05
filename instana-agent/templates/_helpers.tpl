@@ -123,10 +123,6 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{- end }}
 {{- end }}
 
-{{- define "is_openshift" }}
-{{- or (.Values.openshift) (.Capabilities.APIVersions.Has "apps.openshift.io/v1") }}
-{{- end }}
-
 {{- define "volumeMountsForConfigFileInConfigMap" }}
 {{- $configMapName := (include "instana-agent.fullname" .) }}
 {{- $configMapNameSpace := .Release.Namespace }}

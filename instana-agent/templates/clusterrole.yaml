@@ -1,4 +1,4 @@
-{{- if or .Values.rbac.create (include "is_openshift" .) }}
+{{- if or .Values.rbac.create (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -11,7 +11,7 @@ rules:
     - "/version"
     - "/healthz"
   verbs: ["get"]
-{{- if (include "is_openshift" .) }}
+{{- if or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1") }}
   apiGroups: []
   resources: []
 {{- end }}
@@ -55,7 +55,7 @@ rules:
   resources:
     - "ingresses"
   verbs: ["get", "list", "watch"]
-{{- if (include "is_openshift" .) }}
+{{- if or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1") }}
 - apiGroups: ["apps.openshift.io"]
   resources:
     - "deploymentconfigs"
