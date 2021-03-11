@@ -119,6 +119,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `podSecurityPolicy.name`           | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you. | `nil` |
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
 | `openshift`                        | Whether to install the Helm chart as needed in OpenShift; this setting implies `rbac.create=true` | `false` |
+| `service.create`            | Whether to create a service that exposes the agents' Prometheus, OpenTelemetry and other APIs inside the cluster. Requires Kubernetes 1.17+, as it relies on `topologyKeys`.                              | `false`                                                                                                      |
 | `serviceAccount.create`            | Whether a ServiceAccount should be created                              | `true`                                                                                                      |
 | `serviceAccount.name`              | Name of the ServiceAccount to use                                       | `instana-agent`                                                                                             |
 | `zone.name`                        | Zone that detected technologies will be assigned to                     | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installing-the-chart) for details |
@@ -222,6 +223,10 @@ These options will be rarely used outside of development or debugging of the age
 | `agent.host.repository`            | Host path to mount as the agent maven repository                        | `nil`                                                                                                       |
 
 ## Changelog
+
+### v1.2.7
+
+* Fix: Make service opt-in, as it uses functionality (`topologyKeys`) that is available only in K8S 1.17+.
 
 ### v1.2.6
 
