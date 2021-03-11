@@ -1,4 +1,5 @@
 {{- if .Values.service.create -}}
+---
 apiVersion: v1
 kind: Service
 metadata:

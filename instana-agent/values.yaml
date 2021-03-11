@@ -70,6 +70,8 @@ agent:
     #   https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
     priorityClassName: null
 
+    # agent.pod.requests and agent.pod.limits adjusts the resource assignments for the DaemonSet agent 
+    #   regardless of the kubernetes.deployment.enabled setting
     requests:
       # agent.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
       memory: 512Mi
@@ -111,7 +113,38 @@ agent:
     autoMountConfigEntries: false
 
   configuration_yaml: |
-    # Place agent configuration here
+    # Manual a-priori configuration. Configuration will be only used when the sensor
+    # is actually installed by the agent.
+    # The commented out example values represent example configuration and are not
+    # necessarily defaults. Defaults are usually 'absent' or mentioned separately.
+    # Changes are hot reloaded unless otherwise mentioned.
+
+    # It is possible to create files called 'configuration-abc.yaml' which are
+    # merged with this file in file system order. So 'configuration-cde.yaml' comes
+    # after 'configuration-abc.yaml'. Only nested structures are merged, values are
+    # overwritten by subsequent configurations.
+
+    # Secrets
+    # To filter sensitive data from collection by the agent, all sensors respect
+    # the following secrets configuration. If a key collected by a sensor matches
+    # an entry from the list, the value is redacted.
+    #com.instana.secrets:
+    #  matcher: 'contains-ignore-case' # 'contains-ignore-case', 'contains', 'regex'
+    #  list:
+    #    - 'key'
+    #    - 'password'
+    #    - 'secret'
+
+    # Host
+    #com.instana.plugin.host:
+    #  tags:
+    #    - 'dev'
+    #    - 'app1'
+
+    # Hardware & Zone
+    #com.instana.plugin.generic.hardware:
+    #  enabled: true # disabled by default
+    #  availability-zone: 'zone'
 
   # agent.redactKubernetesSecrets sets the INSTANA_KUBERNETES_REDACT_SECRETS environment variable.
   # redactKubernetesSecrets: null
@@ -165,3 +198,23 @@ podSecurityPolicy:
 zone:
   # zone.name is the custom zone that detected technologies will be assigned to
   name: null
+
+kubernetes:
+  # Configures use of a Deployment for the Kubernetes sensor rather than as a potential member of the DaemonSet
+  deployment:
+    # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
+    enabled: false
+    replicas: 2 # By default, hot standby; if the cluster has only one node, however, this may cause `helm install/upgrade --wait` to fail due to anti-affinity among these pods
+
+    # kubernetes.deployment.pod adjusts the resource assignments for the agent independently of the DaemonSet agent when kubernetes.deployment.enabled=true
+    pod:
+      requests:
+        # agent.pod.deployment.requests.memory is the requested memory allocation in MiB for the agent pods.
+        memory: 1024Mi
+        # agent.pod.deployment.requests.cpu are the requested CPU units allocation for the agent pods.
+        cpu: 1.5
+      limits:
+        # agent.pod.deployment.limits.memory set the memory allocation limits in MiB for the agent pods.
+        memory: 6144Mi
+        # agent.pod.deployment.limits.cpu sets the CPU units allocation limits for the agent pods.
+        cpu: 4

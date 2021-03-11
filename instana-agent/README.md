@@ -95,17 +95,17 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.updateStrategy.type`        | [Daemonet update strategy type](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/); valid values are `OnDelete` and `RollingUpdate` | `RollingUpdate` |
 | `agent.updateStrategy.rollingUpdate.maxUnavailable` | How many agent pods can be updated at once; this value is ignored if `agent.updateStrategy.type` is different than `RollingUpdate` | `1` |
 | `agent.pod.annotations`            | Additional annotations to apply to the pod                              | `{}`                                                                                                        |
-| `agent.pod.limits.cpu`             | Container cpu limits in cpu cores                                       | `1.5`                                                                                                       |
-| `agent.pod.limits.memory`          | Container memory limits in MiB                                          | `512`                                                                                                       |
 | `agent.pod.priorityClassName`      | Name of an _existing_ PriorityClass that should be set on the agent pods | `nil`                                                                                                      |
-| `agent.pod.proxyHost`              | Hostname/address of a proxy                                             | `nil`                                                                                                       |
-| `agent.pod.proxyPort`              | Port of a proxy                                                         | `nil`                                                                                                       |
-| `agent.pod.proxyProtocol`          | Proxy protocol. Supported proxy types are `http` (for both HTTP and HTTPS proxies), `socks4`, `socks5`.   | `nil`                                                         |
-| `agent.pod.proxyUser`              | Username of the proxy auth                                              | `nil`                                                                                                       |
-| `agent.pod.proxyPassword`          | Password of the proxy auth                                              | `nil`                                                                                                       |
-| `agent.pod.proxyUseDNS`            | Boolean if proxy also does DNS                                          | `nil`                                                                                                       |
-| `agent.pod.requests.memory`        | Container memory requests in MiB                                        | `512`                                                                                                       |
+| `agent.proxyHost`              | Hostname/address of a proxy                                             | `nil`                                                                                                       |
+| `agent.proxyPort`              | Port of a proxy                                                         | `nil`                                                                                                       |
+| `agent.proxyProtocol`          | Proxy protocol. Supported proxy types are `http` (for both HTTP and HTTPS proxies), `socks4`, `socks5`.   | `nil`                                                         |
+| `agent.proxyUser`              | Username of the proxy auth                                              | `nil`                                                                                                       |
+| `agent.proxyPassword`          | Password of the proxy auth                                              | `nil`                                                                                                       |
+| `agent.proxyUseDNS`            | Boolean if proxy also does DNS                                          | `nil`                                                                                                       |
+| `agent.pod.limits.cpu`             | Container cpu limits in cpu cores                                       | `1.5`                                                                                                       |
+| `agent.pod.limits.memory`          | Container memory limits in MiB                                          | `512Mi`                                                                                                       |
 | `agent.pod.requests.cpu`           | Container cpu requests in cpu cores                                     | `0.5`                                                                                                       |
+| `agent.pod.requests.memory`        | Container memory requests in MiB                                        | `512Mi`                                                                                                       |
 | `agent.pod.tolerations`            | Tolerations for pod assignment                                          | `[]` |
 | `agent.pod.affinity`               | Affinity for pod assignment                                             | `{}` |
 | `agent.env`                        | Additional environment variables for the agent                          | `{}` |
@@ -115,6 +115,11 @@ The following table lists the configurable parameters of the Instana chart and t
 | `leaderElector.image.name`         | The elector image name to pull                                          | `instana/leader-elector`                                                                                             |
 | `leaderElector.image.digest`               | The image digest to pull; if specified, it causes `leaderElector.image.tag` to be ignored                                       | `nil`                                                                                                    |
 | `leaderElector.image.tag`                  | The image tag to pull; this property is ignored if `leaderElector.image.digest` is specified                                               | `latest` |
+| `kubernetes.deployment.enabled`          | Isolate kubernetes sensor with a deployment (tech preview)                                           | `false`                                                                                                    |
+| `kubernetes.deployment.pod.limits.cpu`     | CPU request for the `kubernetes-sensor` pods (tech preview)                                           | `4`                                                                                                    |
+| `kubernetes.deployment.pod.limits.memory`     | Memory request limits for the `kubernetes-sensor` pods (tech preview)                                           | `6144Mi`                                                                                                    |
+| `kubernetes.deployment.pod.requests.cpu`     | CPU limit for the `kubernetes-sensor` pods (tech preview)                                           | `1.5`                                                                                                    |
+| `kubernetes.deployment.pod.requests.memory`     | Memory limit for the `kubernetes-sensor` pods (tech preview)                                           | `1024Mi`                                                                                                    |
 | `podSecurityPolicy.enable`         | Whether a PodSecurityPolicy should be authorized for the Instana Agent pods. Requires `rbac.create` to be `true` as well. | `false` See [PodSecurityPolicy](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#podsecuritypolicy) for more details. |
 | `podSecurityPolicy.name`           | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you. | `nil` |
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
@@ -145,6 +150,12 @@ To configure the agent, you can either:
 This configuration will be used for all Instana Agents on all nodes. Visit the [agent configuration documentation](https://docs.instana.io/setup_and_manage/host_agent/#agent-configuration-file) for more details on configuration options.
 
 _Note:_ This Helm Chart does not support configuring [Multiple Configuration Files](https://www.instana.com/docs/setup_and_manage/host_agent/configuration#multiple-configuration-files).
+
+### Agent Pod Sizing
+
+The `agent.pod.requests.cpu`, `agent.pod.requests.memory`, `agent.pod.limits.cpu` and `agent.pod.limits.memory` settings allow you to change the sizing of the `instana-agent` pods.
+If you are using the [Kubernetes Sensor Deployment](#kubernetes-sensor-deployment) functionality, you may be able to reduce the default amount of resources, and especially memory, allocated to the Instana agents that monitor your applications.
+Actual sizing data depends very much on how many pods, containers and applications are monitored, and how much traces they generate, so we cannot really provide a rule of thumb for the sizing.
 
 ### Bring your own Keys secret
 
@@ -222,7 +233,30 @@ These options will be rarely used outside of development or debugging of the age
 |------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `agent.host.repository`            | Host path to mount as the agent maven repository                        | `nil`                                                                                                       |
 
+### Kubernetes Sensor Deployment
+
+**Note:** This functionality is in Technical Preview.
+
+The data about Kubernetes resources is collected by the Kubernetes sensor in the Instana agent.
+With default configurations, only one Instana agent at any one time is capturing the bulk of Kubernetes data.
+Which agent gets the task is coordinated by a leader elector mechanism running inside the `leader-elector` container of the `instana-agent` pods.
+However, on large Kubernetes clusters, the load on the one Instana agent that fetches the Kubernetes data can be substantial and, to some extent, has lead to rather "generous" resource requests and limits for all the Instana agents across the cluster, as any one of them could become the leader at some point.
+
+The Helm chart has a special mode, enabled by setting `kubernetes.deployment.enabled=true`, that will actually schedule additional Instana agents running _only_ the Kubernetes sensor that run in a dedicated `kubernetes-sensor` Deployment inside the `instana-agent` namespace.
+The pods containing agents that run only the Kubernetes sensor are called `kubernetes-sensor` pods.
+When `kubernetes.deployment.enabled=true`, the `instana-agent` pods running inside the daemonset do _not_ contain the `leader-elector` container, which is instead scheduled inside the `kubernetes-sensor` pods.
+
+The `instana-agent` and `kubernetes-sensor` pods share the same configurations in terms of backend-related configurations (including [additional backends](#configuring-additional-backends)).
+
+It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters of more than 10 nodes, and in that case, you may be able to reduce the amount of resources assigned to the `instana-agent` pods, especially in terms of memory, using the [Agent Pod Sizing](#agent-pod-sizing) settings.
+The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
+
 ## Changelog
+
+### v1.2.8
+
+* **Technical Preview:** Introduce a new mode of running to the Kubernetes sensor using a dedicated deployment.
+  See the [Kubernetes Sensor Deployment](#kubernetes-sensor-deployment) section for more information.
 
 ### v1.2.7
 
