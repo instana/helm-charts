@@ -19,7 +19,7 @@ agent:
   # keysSecret: null
 
   # agent.listenAddress is the IP address the agent HTTP server will listen to.
-  # listenAddress: *
+  # listenAddress: "*"
 
   # agent.endpointHost is the hostname of the Instana server your agents will connect to.
   endpointHost: ingress-red-saas.instana.io
