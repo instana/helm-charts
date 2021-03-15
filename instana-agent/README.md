@@ -253,7 +253,7 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
-### v1.2.9
+### v1.2.8
 
 * **Technical Preview:** Introduce a new mode of running to the Kubernetes sensor using a dedicated deployment.
   See the [Kubernetes Sensor Deployment](#kubernetes-sensor-deployment) section for more information.
