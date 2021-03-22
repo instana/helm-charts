@@ -1,4 +1,4 @@
-{{- if .Values.service.create -}}
+{{- if or .Values.service.create (or .Values.opentelemetry.enabled .Values.prometheus.remoteWrite.enabled ) -}}
 ---
 apiVersion: v1
 kind: Service

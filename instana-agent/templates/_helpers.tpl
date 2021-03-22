@@ -142,6 +142,10 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{- range $key, $val := $configMapObject.data }}
 {{- if regexMatch "configuration-disable-kubernetes-sensor\\.yaml" $key }}
 {{/* Nothing to do here, this is a special case we want to ignore */}}
+{{- else if regexMatch "configuration-opentelemetry\\.yaml" $key }}
+{{/* Nothing to do here, this is a special case we want to ignore */}}
+{{- else if regexMatch "configuration-prometheus-remote-write\\.yaml" $key }}
+{{/* Nothing to do here, this is a special case we want to ignore */}}
 {{- else if regexMatch "configuration-.*\\.yaml" $key }}
 - name: configuration
   subPath: {{ $key }}
@@ -153,8 +157,6 @@ Composes a container image from a dict containing a "name" field (required), "ta
 
 
 {{- define "instana-agent.commonEnv" -}}
-- name: JAVA_OPTS
-  value: "-XX:+UseContainerSupport -XX:+ExitOnOutOfMemoryError"
 - name: INSTANA_AGENT_LEADER_ELECTOR_PORT
   value: {{ .Values.leaderElector.port | quote }}
 - name: INSTANA_ZONE

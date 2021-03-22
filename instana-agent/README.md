@@ -124,6 +124,8 @@ The following table lists the configurable parameters of the Instana chart and t
 | `podSecurityPolicy.name`           | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you. | `nil` |
 | `rbac.create`                      | Whether RBAC resources should be created                                | `true`                                                                                                      |
 | `openshift`                        | Whether to install the Helm chart as needed in OpenShift; this setting implies `rbac.create=true` | `false` |
+| `opentelemetry.enabled` | Whether to configure the agent to accept telemetry from OpenTelemetry applications. This option also implies `service.create=true`, and requires Kubernetes 1.17+, as it relies on `topologyKeys`.                              | `false` |
+| `prometheus.remoteWrite.enabled` | Whether to configure the agent to accept metrics over its implementation of the `remote_write` Prometheus endpoint. This option also implies `service.create=true`, and requires Kubernetes 1.17+, as it relies on `topologyKeys`.                              | `false` |
 | `service.create`            | Whether to create a service that exposes the agents' Prometheus, OpenTelemetry and other APIs inside the cluster. Requires Kubernetes 1.17+, as it relies on `topologyKeys`.                              | `false`                                                                                                      |
 | `serviceAccount.create`            | Whether a ServiceAccount should be created                              | `true`                                                                                                      |
 | `serviceAccount.name`              | Name of the ServiceAccount to use                                       | `instana-agent`                                                                                             |
@@ -252,6 +254,10 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### v1.2.9
+
+* Simplify setup for using OpenTelemetry and the Prometheus `remote_write` endpoint using the `opentelemetry.enabled` and `prometheus.remoteWrite.enabled` settings, respectively.
 
 ### v1.2.8
 

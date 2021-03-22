@@ -16,6 +16,19 @@ data:
   {{ .Values.agent.configuration_yaml | nindent 4 }}
   {{- end }}
 
+  {{- if .Values.opentelemetry.enabled }}
+  configuration-opentelemetry.yaml: |
+    com.instana.plugin.opentelemetry:
+      enabled: true
+  {{- end }}
+
+  {{- if .Values.prometheus.remoteWrite.enabled }}
+  configuration-prometheus-remote-write.yaml: |
+    com.instana.plugin.prometheus:
+      remote_write:
+        enabled: true
+  {{- end }}
+
   {{- if .Values.kubernetes.deployment.enabled }}
   configuration-disable-kubernetes-sensor.yaml: |
     com.instana.plugin.kubernetes:
