@@ -58,8 +58,6 @@ spec:
             - name: kubernetes-sensor-configuration
               subPath: configuration.yaml
               mountPath: /root/configuration.yaml
-          livenessProbe:
-            {{- include "instana-agent.livenessProbe" . | nindent 12 }}
           resources:
             requests:
               {{- include "instana-agent.resources" .Values.kubernetes.deployment.pod.requests | nindent 14 }}
@@ -67,7 +65,23 @@ spec:
               {{- include "instana-agent.resources" .Values.kubernetes.deployment.pod.limits | nindent 14 }}
           ports:
             - containerPort: 42699
-        {{- include "leader-elector.container" . | nindent 8 }}
+        - name: leader-elector
+          image: {{ include "image" .Values.leaderElector.image | quote }}
+          env:
+            - name: INSTANA_AGENT_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          command:
+            - "/busybox/sh"
+            - "-c"
+            - "sleep 12 && /app/server --election=instana --http=localhost:{{ .Values.leaderElector.port }} --id=$(INSTANA_AGENT_POD_NAME)"
+          resources:
+            requests:
+              cpu: 0.1
+              memory: "64Mi"
+          ports:
+            - containerPort: {{ .Values.leaderElector.port }}
       {{- if .Values.agent.pod.tolerations }}
       tolerations:
         {{- toYaml .Values.agent.pod.tolerations | nindent 8 }}

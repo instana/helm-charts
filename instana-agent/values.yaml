@@ -219,7 +219,7 @@ kubernetes:
         # kubernetes.deployment.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
         memory: 1024Mi
         # kubernetes.deployment.pod.requests.cpu are the requested CPU units allocation for the agent pods.
-        cpu: 1.5
+        cpu: 1
       limits:
         # kubernetes.deployment.pod.limits.memory set the memory allocation limits in MiB for the agent pods.
         memory: 6144Mi
