@@ -79,7 +79,7 @@ agent:
       cpu: 0.5
     limits:
       # agent.pod.limits.memory set the memory allocation limits in MiB for the agent pods.
-      memory: 512Mi
+      memory: 768Mi
       # agent.pod.limits.cpu sets the CPU units allocation limits for the agent pods.
       cpu: 1.5
 
@@ -211,7 +211,8 @@ kubernetes:
   deployment:
     # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
     enabled: false
-    replicas: 2 # By default, hot standby; if the cluster has only one node, however, this may cause `helm install/upgrade --wait` to fail due to anti-affinity among these pods
+    # Use a single replica, the impact will generally be low and we need to address a host of other concerns where clusters are large.
+    replicas: 1
 
     # kubernetes.deployment.pod adjusts the resource assignments for the agent independently of the DaemonSet agent when kubernetes.deployment.enabled=true
     pod:
@@ -219,9 +220,9 @@ kubernetes:
         # kubernetes.deployment.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
         memory: 1024Mi
         # kubernetes.deployment.pod.requests.cpu are the requested CPU units allocation for the agent pods.
-        cpu: 1
+        cpu: 720m
       limits:
         # kubernetes.deployment.pod.limits.memory set the memory allocation limits in MiB for the agent pods.
-        memory: 6144Mi
+        memory: 3072Mi
         # kubernetes.deployment.pod.limits.cpu sets the CPU units allocation limits for the agent pods.
         cpu: 4

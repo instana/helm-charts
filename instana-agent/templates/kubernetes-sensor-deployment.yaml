@@ -27,14 +27,14 @@ spec:
         instana-configuration-hash: {{ cat ( join "," .Values.agent.additionalBackends ) | sha1sum }}
     spec:
       serviceAccountName: {{ template "instana-agent.serviceAccountName" . }}
-      {{- if .Values.agent.pod.nodeSelector }}
+      {{- if .Values.kubernetes.deployment.pod.nodeSelector }}
       nodeSelector:
-      {{- range $key, $value := .Values.agent.pod.nodeSelector }}
+      {{- range $key, $value := .Values.kubernetes.deployment.pod.nodeSelector }}
         {{ $key }}: {{ $value | quote }}
       {{- end }}
       {{- end }}
-      {{- if .Values.agent.pod.priorityClassName }}
-      priorityClassName: {{ .Values.agent.pod.priorityClassName | quote }}
+      {{- if .Values.kubernetes.deployment.pod.priorityClassName }}
+      priorityClassName: {{ .Values.kubernetes.deployment.pod.priorityClassName | quote }}
       {{- end }}
       {{- if typeIs "[]interface {}" .Values.agent.image.pullSecrets }}
       imagePullSecrets:
@@ -50,6 +50,8 @@ spec:
           securityContext:
             privileged: true
           env:
+            - name: INSTANA_USE_MEMORY_CALCULATOR
+              value: "true"
             - name: INSTANA_AGENT_MODE
               value: KUBERNETES
             {{- include "instana-agent.commonEnv" . | nindent 12 }}
@@ -82,9 +84,9 @@ spec:
               memory: "64Mi"
           ports:
             - containerPort: {{ .Values.leaderElector.port }}
-      {{- if .Values.agent.pod.tolerations }}
+      {{- if .Values.kubernetes.deployment.pod.tolerations }}
       tolerations:
-        {{- toYaml .Values.agent.pod.tolerations | nindent 8 }}
+        {{- toYaml .Values.kubernetes.deployment.pod.tolerations | nindent 8 }}
       {{- end }}
       affinity:
         podAntiAffinity:

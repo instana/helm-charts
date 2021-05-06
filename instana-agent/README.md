@@ -103,7 +103,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.proxyPassword`          | Password of the proxy auth                                              | `nil`                                                                                                       |
 | `agent.proxyUseDNS`            | Boolean if proxy also does DNS                                          | `nil`                                                                                                       |
 | `agent.pod.limits.cpu`             | Container cpu limits in cpu cores                                       | `1.5`                                                                                                       |
-| `agent.pod.limits.memory`          | Container memory limits in MiB                                          | `512Mi`                                                                                                       |
+| `agent.pod.limits.memory`          | Container memory limits in MiB                                          | `768Mi`                                                                                                       |
 | `agent.pod.requests.cpu`           | Container cpu requests in cpu cores                                     | `0.5`                                                                                                       |
 | `agent.pod.requests.memory`        | Container memory requests in MiB                                        | `512Mi`                                                                                                       |
 | `agent.pod.tolerations`            | Tolerations for pod assignment                                          | `[]` |
