@@ -255,11 +255,21 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
-### v1.2.9
+### v1.2.14
+
+* Update Agent container mounts. Make some read-only as we don't need all mounts with read-write permissions.
+    Additionally add the mount for `/var/data` which is needed in certain environments for the Agent to function
+    properly.
+
+### v1.2.13
+
+* Update memory settings specifically for the Kubernetes sensor (Technical Preview)
+
+### v1.2.11
 
 * Simplify setup for using OpenTelemetry and the Prometheus `remote_write` endpoint using the `opentelemetry.enabled` and `prometheus.remoteWrite.enabled` settings, respectively.
 
-### v1.2.8
+### v1.2.9
 
 * **Technical Preview:** Introduce a new mode of running to the Kubernetes sensor using a dedicated deployment.
   See the [Kubernetes Sensor Deployment](#kubernetes-sensor-deployment) section for more information.
