@@ -92,6 +92,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.image.pullSecrets`          | Image pull secrets; if not specified (default) _and_ `agent.image.name` starts with `containers.instana.io`, it will be automatically set to `[{ "name": "containers-instana-io" }]` to match the default secret created in this case. | `nil`                                                                                                    |
 | `agent.listenAddress`              | List of addresses to listen on, or "*" for all interfaces               | `nil`                                                                                                       |
 | `agent.mode`                       | Agent mode. Supported values are `APM`, `INFRASTRUCTURE`, `AWS`         | `APM`                                                                                                 |
+| `agent.instanaMvnRepoUrl`        | Override for the Maven repository URL when the Agent needs to connect to a locally provided Maven repository 'proxy' | `nil` Usually not required |
 | `agent.updateStrategy.type`        | [Daemonet update strategy type](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/); valid values are `OnDelete` and `RollingUpdate` | `RollingUpdate` |
 | `agent.updateStrategy.rollingUpdate.maxUnavailable` | How many agent pods can be updated at once; this value is ignored if `agent.updateStrategy.type` is different than `RollingUpdate` | `1` |
 | `agent.pod.annotations`            | Additional annotations to apply to the pod                              | `{}`                                                                                                        |
@@ -254,6 +255,14 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### 1.2.16
+
+* Add configuration option for `INSTANA_MVN_REPOSITORY_URL` setting on the Agent container.
+
+### 1.2.15
+
+* Internal pipeline changes. No significant changes to the Helm charts
 
 ### v1.2.14
 

@@ -50,8 +50,6 @@ spec:
           securityContext:
             privileged: true
           env:
-            - name: INSTANA_USE_MEMORY_CALCULATOR
-              value: "true"
             - name: INSTANA_AGENT_MODE
               value: KUBERNETES
             {{- include "instana-agent.commonEnv" . | nindent 12 }}

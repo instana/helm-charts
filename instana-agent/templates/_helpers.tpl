@@ -181,6 +181,10 @@ Composes a container image from a dict containing a "name" field (required), "ta
       name: {{ template "instana-agent.keysSecretName" . }}
       key: downloadKey
       optional: true
+{{- if .Values.agent.instanaMvnRepoUrl }}
+- name: INSTANA_MVN_REPOSITORY_URL
+  value: {{ .Values.agent.instanaMvnRepoUrl | quote }}
+{{- end }}
 {{- if .Values.agent.proxyHost }}
 - name: INSTANA_AGENT_PROXY_HOST
   value: {{ .Values.agent.proxyHost | quote }}
