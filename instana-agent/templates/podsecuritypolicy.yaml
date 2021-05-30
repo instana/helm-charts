@@ -21,7 +21,7 @@ spec:
     - hostPath
   allowedHostPaths:
     - pathPrefix: "/dev"
-      readOnly: true
+      readOnly: false
     - pathPrefix: "/run"
       readOnly: false
     - pathPrefix: "/var/run"
@@ -29,15 +29,15 @@ spec:
     - pathPrefix: "/var/vcap/sys/run/docker"
       readOnly: false
     - pathPrefix: "/sys"
-      readOnly: true
+      readOnly: false
     - pathPrefix: "/var/log"
-      readOnly: true
+      readOnly: false
     - pathPrefix: "/var/lib"
-      readOnly: true
+      readOnly: false
     - pathPrefix: "/var/data"
-      readOnly: true
+      readOnly: false
     - pathPrefix: "/etc/machine-id"
-      readOnly: true
+      readOnly: false
     {{- if .Values.agent.host.repository }}
     - pathPrefix: {{ .Values.agent.host.repository }}
       readOnly: false

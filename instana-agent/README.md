@@ -256,6 +256,11 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.17
+
+* Update Pod Security Policies as the `readOnly: true` appears not to be working for the mount points and
+  actually causes the Agent deployment to fail when these policies are enforced in the cluster.
+
 ### 1.2.16
 
 * Add configuration option for `INSTANA_MVN_REPOSITORY_URL` setting on the Agent container.
