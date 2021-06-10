@@ -256,6 +256,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.18
+
+* Internal change on generated DaemonSet YAML from the Helm charts
+
 ### 1.2.17
 
 * Update Pod Security Policies as the `readOnly: true` appears not to be working for the mount points and
