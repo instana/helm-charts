@@ -260,7 +260,7 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{ $backendIndex :=add $index 2 -}}
 - name: additional-backend-{{$backendIndex}}
   configMap:
-    name: {{ include "instana-agent.fullname" . }}
+    name: {{ include "instana-agent.fullname" $ }}
 {{- end }}
 {{- end }}
 {{- end -}}
