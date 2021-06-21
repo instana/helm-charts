@@ -256,6 +256,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.21
+
+* upgrade leader-elector image to v0.5.6 to enable usage on s390x and arm64
+
 ### 1.2.18 / 1.2.19
 
 * Internal change on generated DaemonSet YAML from the Helm charts
