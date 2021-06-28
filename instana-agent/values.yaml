@@ -19,7 +19,7 @@ agent:
   # keysSecret: null
 
   # agent.listenAddress is the IP address the agent HTTP server will listen to.
-  # listenAddress: *
+  # listenAddress: "*"
 
   # agent.endpointHost is the hostname of the Instana server your agents will connect to.
   endpointHost: ingress-red-saas.instana.io
@@ -70,7 +70,7 @@ agent:
     #   https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
     priorityClassName: null
 
-    # agent.pod.requests and agent.pod.limits adjusts the resource assignments for the DaemonSet agent 
+    # agent.pod.requests and agent.pod.limits adjusts the resource assignments for the DaemonSet agent
     #   regardless of the kubernetes.deployment.enabled setting
     requests:
       # agent.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
