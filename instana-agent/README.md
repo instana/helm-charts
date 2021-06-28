@@ -256,6 +256,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.22
+
+* Fix templating scope when defining multiple backends
+
 ### 1.2.21
 
 * Internal updates
