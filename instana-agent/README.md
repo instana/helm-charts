@@ -256,6 +256,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.23
+
+* Bump leader-elector image to v0.5.7 to fix a potential Golang bug in the elector
+
 ### 1.2.22
 
 * Fix templating scope when defining multiple backends
