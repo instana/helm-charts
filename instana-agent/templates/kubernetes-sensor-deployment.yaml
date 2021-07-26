@@ -18,6 +18,9 @@ spec:
       labels:
         {{- include "instana-agent.commonLabels" . | nindent 8 }}
         instana/agent-mode: KUBERNETES
+      {{- if .Values.agent.pod.labels }}
+        {{- toYaml .Values.agent.pod.labels | nindent 8 }}
+      {{- end }}
       annotations:
       {{- if .Values.agent.pod.annotations }}
         {{- toYaml .Values.agent.pod.annotations | nindent 8 }}
