@@ -96,6 +96,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.updateStrategy.type`        | [Daemonet update strategy type](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/); valid values are `OnDelete` and `RollingUpdate` | `RollingUpdate` |
 | `agent.updateStrategy.rollingUpdate.maxUnavailable` | How many agent pods can be updated at once; this value is ignored if `agent.updateStrategy.type` is different than `RollingUpdate` | `1` |
 | `agent.pod.annotations`            | Additional annotations to apply to the pod                              | `{}`                                                                                                        |
+| `agent.pod.labels`               | Additional labels to apply to the Agent pod                               | `{}` |
 | `agent.pod.priorityClassName`      | Name of an _existing_ PriorityClass that should be set on the agent pods | `nil`                                                                                                      |
 | `agent.proxyHost`              | Hostname/address of a proxy                                             | `nil`                                                                                                       |
 | `agent.proxyPort`              | Port of a proxy                                                         | `nil`                                                                                                       |
@@ -255,6 +256,10 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### 1.2.25
+
+* Add `agent.pod.labels` to add custom labels to the Instana Agent pods
 
 ### 1.2.24
 

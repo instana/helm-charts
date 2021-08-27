@@ -58,6 +58,9 @@ agent:
     # agent.pod.annotations are additional annotations to be added to the agent pods.
     annotations: {}
 
+    # agent.pod.labels are additional labels to be added to the agent pods.
+    labels: {}
+
     # agent.pod.tolerations are tolerations to influence agent pod assignment.
     #   https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     tolerations: []
