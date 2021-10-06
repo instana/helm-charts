@@ -304,3 +304,16 @@ failureThreshold: 3
   ports:
     - containerPort: {{ .Values.leaderElector.port }}
 {{- end -}}
+
+{{- define "instana-agent.tls-volume" -}}
+- name: {{ include "instana-agent.fullname" . }}-tls
+  secret:
+    secretName: {{ .Values.agent.tls.secretName |  default  (printf "%s-tls" (include "instana-agent.fullname" .)) }}
+    defaultMode: 0440
+{{- end -}}
+
+{{- define "instana-agent.tls-volumeMounts" -}}
+- name: {{ include "instana-agent.fullname" . }}-tls
+  mountPath: /opt/instana/agent/etc/certs
+  readOnly: true
+{{- end -}}

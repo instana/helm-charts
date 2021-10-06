@@ -85,6 +85,9 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.downloadKey`                | Your Instana Download key                                               | `nil` Usually not required                                                                                  |
 | `agent.keysSecret`                 | As an alternative to specifying `agent.key` and, optionally, `agent.downloadKey`, you can instead specify the name of the secret in the namespace in which you install the Instana agent that carries the agent key and download key | `nil` Usually not required, see [Bring your own Keys secret](#bring-your-own-keys-secret) for more details |
 | `agent.additionalBackends`         | List of additional backends to report to; it must specify the `endpointHost` and `key` fields, and optionally `endpointPort` | `[]` Usually not required; see [Configuring Additional Backends](#configuring-additional-backends) for more info and examples |
+| `agent.tls.secretName`             | The name of the secret of type `kubernetes.io/tls` which contains the TLS relevant data. If the name is provided, `agent.tls.certificate` and `agent.tls.key` will be ignored. | `nil` |
+| `agent.tls.certificate`            | The certificate data encoded as base64. Which will be used to create a new secret of type `kubernetes.io/tls`. | `nil` |
+| `agent.tls.key`                    | The private key data encoded as base64. Which will be used to create a new secret of type `kubernetes.io/tls`. | `nil` |
 | `agent.image.name`                 | The image name to pull                                                  | `instana/agent`                                                                                             |
 | `agent.image.digest`               | The image digest to pull; if specified, it causes `agent.image.tag` to be ignored                                       | `nil`                                                                                                    |
 | `agent.image.tag`                  | The image tag to pull; this property is ignored if `agent.image.digest` is specified                                               | `latest`                                                                                                    |
@@ -229,6 +232,31 @@ If your infrastructure has multiple networks defined, you might need to allow th
 
 * `agent.listenAddress`
 
+### Setup TLS Encryption for Agent Endpoint
+
+TLS encryption can be added via two variants.
+Either an existing secret can be used or a certificate and a private key can be used during the installation.
+
+#### Using existing secret
+
+An existing secret of type `kubernetes.io/tls` can be used. 
+Only the `secretName` must be provided during the installation with `--set 'agent.tls.secretName=<YOUR_SECRET_NAME>'`.
+The files from the provided secret are then mounted into the agent.
+
+#### Provide certificate and private key
+
+On the other side, a certificate and a private key can be added during the installation.
+The certificate and private key must be base64 encoded.
+
+To use this variant, execute `helm install` with the following additional parameters:
+
+```
+--set 'agent.tls.certificate=<YOUR_CERTIFICATE_BASE64_ENCODED>'
+--set 'agent.tls.key=<YOUR_PRIVATE_KEY_BASE64_ENCODED>'
+```
+
+If `agent.tls.secretName` is set, then `agent.tls.certificate` and `agent.tls.key` are ignored. 
+
 ### Development and debugging options
 
 These options will be rarely used outside of development or debugging of the agent.
@@ -256,6 +284,11 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### 1.2.26
+
+* Add TLS support. An existing secret can be used of type `kubernetes.io/tls`. Or provide a certificate and a private key, which creates a new secret.
+* Update leader elector image version to 0.5.9 to support PPCle
 
 ### 1.2.25
 

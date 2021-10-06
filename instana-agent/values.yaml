@@ -33,6 +33,17 @@ agent:
     #   endpointPort: 443
     #   key: <agent_key>
 
+  # TLS for end-to-end encryption between Instana agent and clients accessing the agent.
+  # The Instana agent does not yet allow enforcing TLS encryption.
+  # TLS is only enabled on a connection when requested by the client.
+  tls:
+    # In order to enable TLS, a secret of type kubernetes.io/tls must be specified.
+    # secretName is the name of the secret that has the relevant files.
+    # secretName: null
+    # Otherwise,  the certificate and the private key must be provided as base64 encoded.
+    # certificate: null
+    # key: null
+
   image:
     # agent.image.name is the name of the container image of the Instana agent.
     name: instana/agent
@@ -167,7 +178,7 @@ leaderElector:
     # leaderElector.image.digest is the digest (a.k.a. Image ID) of the leader elector container image; if specified, it has priority over leaderElector.image.digest, which will be ignored.
     #digest:
     # leaderElector.image.tag is the tag name of the agent container image; if leaderElector.image.digest is specified, this property is ignored.
-    tag: 0.5.8
+    tag: 0.5.9
   port: 42655
 
 # openshift specifies whether the cluster role should include openshift permissions and other tweaks to the YAML.
