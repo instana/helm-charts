@@ -239,7 +239,7 @@ Either an existing secret can be used or a certificate and a private key can be 
 
 #### Using existing secret
 
-An existing secret of type `kubernetes.io/tls` can be used. 
+An existing secret of type `kubernetes.io/tls` can be used.
 Only the `secretName` must be provided during the installation with `--set 'agent.tls.secretName=<YOUR_SECRET_NAME>'`.
 The files from the provided secret are then mounted into the agent.
 
@@ -255,7 +255,7 @@ To use this variant, execute `helm install` with the following additional parame
 --set 'agent.tls.key=<YOUR_PRIVATE_KEY_BASE64_ENCODED>'
 ```
 
-If `agent.tls.secretName` is set, then `agent.tls.certificate` and `agent.tls.key` are ignored. 
+If `agent.tls.secretName` is set, then `agent.tls.certificate` and `agent.tls.key` are ignored.
 
 ### Development and debugging options
 
@@ -284,6 +284,10 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### 1.2.27
+
+* Update leader elector image to `0.5.10` to tone down logging and make it configurable
 
 ### 1.2.26
 
