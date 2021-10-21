@@ -161,11 +161,13 @@ Composes a container image from a dict containing a "name" field (required), "ta
   value: {{ .Values.leaderElector.port | quote }}
 - name: INSTANA_ZONE
   value: {{ .Values.zone.name | quote }}
+{{- if .Values.cluster.name }}
 - name: INSTANA_KUBERNETES_CLUSTER_NAME
   valueFrom:
     configMapKeyRef:
       name: {{ template "instana-agent.fullname" . }}
       key: cluster_name
+{{- end }}
 - name: INSTANA_AGENT_ENDPOINT
   value: {{ .Values.agent.endpointHost | quote }}
 - name: INSTANA_AGENT_ENDPOINT_PORT

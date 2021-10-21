@@ -285,6 +285,11 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.28
+
+* Fix deployment when `cluster.name` is not specified. Should be allowed according to docs but previously broke the Pod
+    when starting up.
+
 ### 1.2.27
 
 * Update leader elector image to `0.5.10` to tone down logging and make it configurable
