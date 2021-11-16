@@ -285,6 +285,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.29
+
+* Add an additional port to the Instana Agent `Service` definition, for the OpenTelemetry registered IANA port 4317.
+
 ### 1.2.28
 
 * Fix deployment when `cluster.name` is not specified. Should be allowed according to docs but previously broke the Pod
