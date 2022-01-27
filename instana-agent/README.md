@@ -7,7 +7,7 @@ This chart adds the Instana Agent to all schedulable nodes in your cluster via a
 
 ## Prerequisites
 
-* Kubernetes 1.9.x - 1.18.x OR OpenShift 4.x
+* Kubernetes 1.9.x - 1.23.x OR OpenShift 4.x
 * Helm 3
 
 ## Installation
@@ -284,6 +284,10 @@ It is advised to use the `kubernetes.deployment.enabled=true` mode on clusters o
 The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.requests.memory`, `kubernetes.deployment.pod.limits.cpu` and `kubernetes.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `kubernetes-sensor` pods.
 
 ## Changelog
+
+### 1.2.30
+
+* Pull `instana/agent` and `instana/leader-elector` images from IBM Cloud Container Registry at `icr.io/instana`.
 
 ### 1.2.29
 
