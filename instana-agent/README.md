@@ -285,6 +285,11 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.30
+
+* Pull agent image from IBM Cloud Container Registry (icr.io/instana/agent). No code changes have been made.
+* Bump leader-elector image to v0.5.13 and pull from IBM Cloud Container Registry (icr.io/instana/leader-elector). No code changes have been made.
+
 ### 1.2.29
 
 * Add an additional port to the Instana Agent `Service` definition, for the OpenTelemetry registered IANA port 4317.
