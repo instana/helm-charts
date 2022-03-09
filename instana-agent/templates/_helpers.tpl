@@ -291,10 +291,12 @@ failureThreshold: 3
     - "-c"
     - "sleep 12 && /app/server --election=instana --http=localhost:{{ .Values.leaderElector.port }} --id=$(INSTANA_AGENT_POD_NAME)"
   resources:
-    requests:
-      {{- include "leader-elector.resources" .Values.kubernetes.deployment.pod.requests | nindent 14 }}
     limits:
-      {{- include "leader-elector.resources" .Values.kubernetes.deployment.pod.limits | nindent 14 }}
+      cpu: {{ .Values.leaderElector.limits.cpu }}
+      memory: {{ .Values.leaderElector.limits.memory }}
+    requests:
+      cpu: {{ .Values.leaderElector.requests.cpu }}
+      memory: {{ .Values.leaderElector.requests.memory }}
   livenessProbe:
     httpGet: # Leader elector /health endpoint expects version 0.5.8 minimum, otherwise always returns 200 OK
       host: 127.0.0.1 # localhost because Pod has hostNetwork=true

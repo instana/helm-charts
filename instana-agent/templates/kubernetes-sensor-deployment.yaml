@@ -85,11 +85,12 @@ spec:
             - "-c"
             - "sleep 12 && /app/server --election=instana --http=localhost:{{ .Values.leaderElector.port }} --id=$(INSTANA_AGENT_POD_NAME)"
           resources:
+            limits:
+              cpu: {{ .Values.leaderElector.limits.cpu }}
+              memory: {{ .Values.leaderElector.limits.memory }}
             requests:
-              requests:
-                {{- include "leader-elector.resources" .Values.kubernetes.deployment.pod.requests | nindent 14 }}
-              limits:
-                {{- include "leader-elector.resources" .Values.kubernetes.deployment.pod.limits | nindent 14 }}
+              cpu: {{ .Values.leaderElector.requests.cpu }}
+              memory: {{ .Values.leaderElector.requests.memory }}
           ports:
             - containerPort: {{ .Values.leaderElector.port }}
       {{- if .Values.kubernetes.deployment.pod.tolerations }}

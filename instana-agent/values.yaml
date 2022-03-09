@@ -179,7 +179,13 @@ leaderElector:
     #digest:
     # leaderElector.image.tag is the tag name of the agent container image; if leaderElector.image.digest is specified, this property is ignored.
     tag: 0.5.14
+  limits:
+    cpu: 100mi
+    memory: 64Mi
   port: 42655
+  requests:
+    cpu: 100mi
+    memory: 64Mi
 
 # openshift specifies whether the cluster role should include openshift permissions and other tweaks to the YAML.
 # The chart will try to auto-detect if the cluster is OpenShift, so you will likely not even need to set this explicitly.
