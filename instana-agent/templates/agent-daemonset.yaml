@@ -77,6 +77,10 @@ spec:
             {{- if not (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
             - name: var-run-kubo
               mountPath: /var/vcap/sys/run/docker
+            - name: var-run-containerd
+              mountPath: /var/vcap/sys/run/containerd
+            - name: var-containerd-config
+              mountPath: /var/vcap/jobs/containerd/config
             {{- end }}
             - name: sys
               mountPath: /sys
@@ -153,6 +157,12 @@ spec:
         - name: var-run-kubo
           hostPath:
             path: /var/vcap/sys/run/docker
+        - name: var-run-containerd
+          hostPath:
+            path: /var/vcap/sys/run/containerd
+        - name: var-containerd-config
+          hostPath:
+            path: /var/vcap/jobs/containerd/config
         {{- end }}
         - name: sys
           hostPath:

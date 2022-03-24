@@ -28,6 +28,10 @@ spec:
       readOnly: false
     - pathPrefix: "/var/vcap/sys/run/docker"
       readOnly: false
+    - pathPrefix: "/var/vcap/sys/run/containerd"
+      readOnly: false
+    - pathPrefix: "/var/vcap/jobs/containerd/config"
+      readOnly: false
     - pathPrefix: "/sys"
       readOnly: false
     - pathPrefix: "/var/log"
