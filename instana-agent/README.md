@@ -285,6 +285,10 @@ The `kubernetes.deployment.pod.requests.cpu`, `kubernetes.deployment.pod.request
 
 ## Changelog
 
+### 1.2.33
+
+* Bump leader-elector image to v0.5.15 (Update dependencies)
+
 ### 1.2.32
 
 * Add support for containerd montoring on TKGI  
