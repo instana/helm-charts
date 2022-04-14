@@ -28,6 +28,4 @@ spec:
       port: 4317
       targetPort: 4317
     {{- end }}
-  topologyKeys:
-    - "kubernetes.io/hostname"
 {{- end -}}
