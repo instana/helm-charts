@@ -104,7 +104,7 @@ spec:
             {{- if .Values.agent.configuration.autoMountConfigEntries }}
             {{- include "volumeMountsForConfigFileInConfigMap" . | nindent 12 }}
             {{- end }}
-            {{- if .Values.kubernetes.deployment.enabled }}
+            {{- if or .Values.kubernetes.deployment.enabled .Values.k8s_sensor.deployment.enabled }}
             - name: configuration
               subPath: configuration-disable-kubernetes-sensor.yaml
               mountPath: /opt/instana/agent/etc/instana/configuration-disable-kubernetes-sensor.yaml
@@ -128,7 +128,7 @@ spec:
               {{- include "instana-agent.resources" .Values.agent.pod.limits | nindent 14 }}
           ports:
             - containerPort: 42699
-        {{- if not .Values.kubernetes.deployment.enabled }}
+        {{- if and (not .Values.kubernetes.deployment.enabled) (not .Values.k8s_sensor.deployment.enabled) }}
         {{- include "leader-elector.container" . | nindent 8 }}
         {{- end }}
       {{- if .Values.agent.pod.tolerations }}

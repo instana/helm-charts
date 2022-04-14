@@ -220,8 +220,36 @@ zone:
   # zone.name is the custom zone that detected technologies will be assigned to
   name: null
 
+k8s_sensor:
+  image:
+    # k8s_sensor.image.name is the name of the container image of the Instana agent.
+    name: icr.io/instana/k8sensor
+    # k8s_sensor.image.digest is the digest (a.k.a. Image ID) of the agent container image; if specified, it has priority over agent.image.tag, which will be ignored.
+    #digest:
+    # k8s_sensor.image.tag is the tag name of the agent container image; if agent.image.digest is specified, this property is ignored.
+    tag: latest
+    # k8s_sensor.image.pullPolicy specifies when to pull the image container.
+    pullPolicy: Always
+  deployment:
+    # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
+    enabled: false
+    # Use a single replica, the impact will generally be low and we need to address a host of other concerns where clusters are large.
+    replicas: 1
+    # k8s_sensor.deployment.pod adjusts the resource assignments for the agent independently of the DaemonSet agent when k8s_sensor.deployment.enabled=true
+    pod:
+      requests:
+        # k8s_sensor.deployment.pod.requests.memory is the requested memory allocation in MiB for the agent pods.
+        memory: 128Mi
+        # k8s_sensor.deployment.pod.requests.cpu are the requested CPU units allocation for the agent pods.
+        cpu: 10m
+      limits:
+        # k8s_sensor.deployment.pod.limits.memory set the memory allocation limits in MiB for the agent pods.
+        memory: 1536Mi
+        # k8s_sensor.deployment.pod.limits.cpu sets the CPU units allocation limits for the agent pods.
+        cpu: 500m
+
 kubernetes:
-  # Configures use of a Deployment for the Kubernetes sensor rather than as a potential member of the DaemonSet
+  # Configures use of a Deployment for the Kubernetes sensor rather than as a potential member of the DaemonSet. Is only accepted if k8s_sensor.deployment.enabled=false
   deployment:
     # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
     enabled: false

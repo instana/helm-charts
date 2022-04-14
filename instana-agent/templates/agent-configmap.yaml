@@ -29,7 +29,7 @@ data:
         enabled: true
   {{- end }}
 
-  {{- if .Values.kubernetes.deployment.enabled }}
+  {{- if or .Values.kubernetes.deployment.enabled .Values.k8s_sensor.deployment.enabled }}
   configuration-disable-kubernetes-sensor.yaml: |
     com.instana.plugin.kubernetes:
       enabled: false
