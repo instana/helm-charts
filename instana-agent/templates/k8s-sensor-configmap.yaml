@@ -8,5 +8,5 @@ metadata:
   labels:
     {{- include "instana-agent.commonLabels" . | nindent 4 }}
 data:
-  backend: {{ printf "%s:%d" .Values.agent.endpointHost .Values.agent.endpointPort }}
+  backend: {{ printf "%s:%v" .Values.agent.endpointHost .Values.agent.endpointPort }}
 {{- end }}
