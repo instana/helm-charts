@@ -94,20 +94,15 @@ spec:
       tolerations:
         {{- toYaml .Values.kubernetes.deployment.pod.tolerations | nindent 8 }}
       {{- end }}
-      affinity:
-        podAntiAffinity:
-          # Soft anti-affinity policy: try not to schedule multiple kubernetes-sensor pods on the same node.
-          # If the policy is set to "requiredDuringSchedulingIgnoredDuringExecution", if the cluster has
-          # fewer nodes than the amount of desired replicas, `helm install/upgrade --wait` will not return.
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchExpressions:
                 - key: instana/agent-mode
                   operator: In
                   values: [ KUBERNETES ]
-              topologyKey: "kubernetes.io/hostname"
       volumes:
         {{- include "instana-agent.commonVolumes" . | nindent 8 }}
         - name: kubernetes-sensor-configuration

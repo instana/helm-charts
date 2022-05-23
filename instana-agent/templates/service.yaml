@@ -28,6 +28,11 @@ spec:
       port: 4317
       targetPort: 4317
     {{- end }}
+  {{- if semverCompare ">= 1.22.x" .Capabilities.KubeVersion.Minor }}
+  # since we run agents as DaemonSets we assume every node has this Service available:  
+  internalTrafficPolicy: Local
+  {{- else }}
   topologyKeys:
     - "kubernetes.io/hostname"
+  {{- end }}
 {{- end -}}

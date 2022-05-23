@@ -7,7 +7,7 @@ This chart adds the Instana Agent to all schedulable nodes in your cluster via a
 
 ## Prerequisites
 
-* Kubernetes 1.9.x - 1.18.x OR OpenShift 4.x
+* Kubernetes 1.21+ OR OpenShift 4.8+
 * Helm 3
 
 ## Installation
@@ -129,9 +129,9 @@ The following table lists the configurable parameters of the Instana chart and t
 | `podSecurityPolicy.name`                            | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you.                                                                                                                                | `nil`                                                                                                                                   |
 | `rbac.create`                                       | Whether RBAC resources should be created                                                                                                                                                                                                                                                                               | `true`                                                                                                                                  |
 | `openshift`                                         | Whether to install the Helm chart as needed in OpenShift; this setting implies `rbac.create=true`                                                                                                                                                                                                                      | `false`                                                                                                                                 |
-| `opentelemetry.enabled`                             | Whether to configure the agent to accept telemetry from OpenTelemetry applications. This option also implies `service.create=true`, and requires Kubernetes 1.17+, as it relies on `topologyKeys`.                                                                                                                     | `false`                                                                                                                                 |
-| `prometheus.remoteWrite.enabled`                    | Whether to configure the agent to accept metrics over its implementation of the `remote_write` Prometheus endpoint. This option also implies `service.create=true`, and requires Kubernetes 1.17+, as it relies on `topologyKeys`.                                                                                     | `false`                                                                                                                                 |
-| `service.create`                                    | Whether to create a service that exposes the agents' Prometheus, OpenTelemetry and other APIs inside the cluster. Requires Kubernetes 1.17+, as it relies on `topologyKeys`.                                                                                                                                           | `false`                                                                                                                                 |
+| `opentelemetry.enabled`                             | Whether to configure the agent to accept telemetry from OpenTelemetry applications. This option also implies `service.create=true`, and requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`.                                                                                                                     | `false`                                                                                                                                 |
+| `prometheus.remoteWrite.enabled`                    | Whether to configure the agent to accept metrics over its implementation of the `remote_write` Prometheus endpoint. This option also implies `service.create=true`, and requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`.                                                                                     | `false`                                                                                                                                 |
+| `service.create`                                    | Whether to create a service that exposes the agents' Prometheus, OpenTelemetry and other APIs inside the cluster. Requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`. The `ServiceInternalTrafficPolicy` feature gate needs to be enabled (default: enabled). | `false`                                                                                                                                 |
 | `serviceAccount.create`                             | Whether a ServiceAccount should be created                                                                                                                                                                                                                                                                             | `true`                                                                                                                                  |
 | `serviceAccount.name`                               | Name of the ServiceAccount to use                                                                                                                                                                                                                                                                                      | `instana-agent`                                                                                                                         |
 | `zone.name`                                         | Zone that detected technologies will be assigned to                                                                                                                                                                                                                                                                    | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installing-the-chart) for details                             |
@@ -284,6 +284,19 @@ It is advised to use the `k8s_sensor.deployment.enabled=true` mode on clusters o
 The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.requests.memory`, `k8s_sensor.deployment.pod.limits.cpu` and `k8s_sensor.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `k8sensor` pods.
 
 ## Changelog
+
+### 1.2.36
+
+* Remove Service `topologyKeys`, which was removed in Kubernetes v1.22. Replaced by `internalTrafficPolicy` which is available with Kubernetes v1.21+.
+
+### 1.2.35
+
+* Fix invalid backend port for new Kubernetes sensor (k8sensor)
+
+### 1.2.34
+
+* Add support for new Kubernetes sensor (k8sensor)
+  * New Kubernetes sensor can be used via the flag `--set k8s_sensor.deployment.enabled=true`
 
 ### 1.2.33
 
