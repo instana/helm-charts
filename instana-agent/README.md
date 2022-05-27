@@ -285,6 +285,11 @@ The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.request
 
 ## Changelog
 
+### 1.2.37
+
+* Fix issue where cluster_zone is used as cluster_name when `k8s_sensor.deployment.enabled=true`.
+* Set `HTTPS_PROXY` in k8s deployment when proxy information is set.
+
 ### 1.2.36
 
 * Remove Service `topologyKeys`, which was removed in Kubernetes v1.22. Replaced by `internalTrafficPolicy` which is available with Kubernetes v1.21+.

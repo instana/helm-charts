@@ -2,6 +2,11 @@
 {{- if or .Values.agent.key .Values.agent.keysSecret -}}
 {{- if or .Values.zone.name .Values.cluster.name -}}
 
+{{- $user_name_password := "" -}}
+{{ if .Values.agent.proxyUser }}
+  {{- $user_name_password = print .Values.agent.proxyUser ":" .Values.agent.proxyPass "@" -}}
+{{ end}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -65,7 +70,7 @@ spec:
             - name: BACKEND_URL
               value: "https://$(BACKEND)"
             - name: AGENT_ZONE
-              value: {{ .Values.zone.name | quote }}
+              value: {{ empty .Values.cluster.name | ternary .Values.zone.name .Values.cluster.name}}
             - name: POD_UID
               valueFrom:
                 fieldRef:
@@ -82,6 +87,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            {{- if not (empty .Values.agent.proxyHost) }}
+            - name: HTTPS_PROXY
+              value: "http://{{ $user_name_password }}{{ .Values.agent.proxyHost }}:{{ .Values.agent.proxyPort }}"
+            {{- end }}
           volumeMounts:
             {{- include "instana-agent.commonVolumeMounts" . | nindent 12 }}
             - name: kubernetes-sensor-configuration
