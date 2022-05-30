@@ -285,6 +285,10 @@ The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.request
 
 ## Changelog
 
+### 1.2.38
+
+* Fix issue related to EKS version format when enabling OTel service.
+
 ### 1.2.37
 
 * Fix issue where cluster_zone is used as cluster_name when `k8s_sensor.deployment.enabled=true`.
