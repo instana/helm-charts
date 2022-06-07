@@ -90,6 +90,8 @@ spec:
             {{- if not (empty .Values.agent.proxyHost) }}
             - name: HTTPS_PROXY
               value: "http://{{ $user_name_password }}{{ .Values.agent.proxyHost }}:{{ .Values.agent.proxyPort }}"
+            - name: NO_PROXY
+              value: "kubernetes.default.svc"
             {{- end }}
           volumeMounts:
             {{- include "instana-agent.commonVolumeMounts" . | nindent 12 }}
