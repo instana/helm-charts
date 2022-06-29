@@ -70,26 +70,36 @@ spec:
           volumeMounts:
             - name: dev
               mountPath: /dev
+              mountPropagation: HostToContainer
             - name: run
               mountPath: /run
+              mountPropagation: HostToContainer
             - name: var-run
               mountPath: /var/run
+              mountPropagation: HostToContainer
             {{- if not (or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1")) }}
             - name: var-run-kubo
               mountPath: /var/vcap/sys/run/docker
+              mountPropagation: HostToContainer
             - name: var-run-containerd
               mountPath: /var/vcap/sys/run/containerd
+              mountPropagation: HostToContainer
             - name: var-containerd-config
               mountPath: /var/vcap/jobs/containerd/config
+              mountPropagation: HostToContainer
             {{- end }}
             - name: sys
               mountPath: /sys
+              mountPropagation: HostToContainer
             - name: var-log
               mountPath: /var/log
+              mountPropagation: HostToContainer
             - name: var-lib
               mountPath: /var/lib
+              mountPropagation: HostToContainer
             - name: var-data
               mountPath: /var/data
+              mountPropagation: HostToContainer
             - name: machine-id
               mountPath: /etc/machine-id
             - name: configuration

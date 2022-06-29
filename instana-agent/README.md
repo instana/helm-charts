@@ -285,6 +285,10 @@ The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.request
 
 ## Changelog
 
+### 1.2.40
+
+* Mount all system mounts mountPropagation: HostToContainer.
+
 ### 1.2.39
 
 * Add NO_PROXY to k8sensor deployment to prevent api-server requests from being routed to the proxy.
