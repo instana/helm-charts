@@ -7,46 +7,125 @@ metadata:
   labels:
     {{- include "instana-agent.commonLabels" . | nindent 4 }}
 rules:
-  - apiGroups: [ "" ]
-    resources: [ "configmaps" ]
-    verbs: [ "get", "list", "watch" ]
-
-  - apiGroups: [ "" ]
+  -
+    nonResourceURLs:
+      - /version
+      - /healthz
+    verbs:
+      - get
+  -
+    apiGroups:
+      - extensions
     resources:
-      - "events"
-      - "daemonsets"
-      - "deployments"
-      - "endpoints"
-      - "jobs"
-      - "namespaces"
-      - "nodes"
-      - "persistentvolumes"
-      - "persistentvolumeclaims"
-      - "pods"
-      - "replicasets"
-      - "services"
-      - "statefulsets"
-    verbs: [ "get", "list", "watch" ]
-
-  - apiGroups: [ "apps" ]
+      - deployments
+      - replicasets
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - ""
     resources:
-      - "daemonsets"
-      - "deployments"
-      - "replicasets"
-      - "statefulsets"
-    verbs: [ "get", "list", "watch" ]
-
-  - apiGroups: [ "batch" ]
-    resources: [ "cronjobs", "jobs" ]
-    verbs: [ "get", "list", "watch" ]
-
-  - apiGroups: [ "" ]
-    resources: [ "pods/log" ]
-    verbs: [ "get", "list", "watch" ]
-
-  - apiGroups: [ "policy" ]
-    resources: [ "podsecuritypolicies" ]
-    verbs: [ "use" ]
+      - configmaps
+      - events
+      - services
+      - endpoints
+      - namespaces
+      - nodes
+      - pods
+      - replicationcontrollers
+      - resourcequotas
+      - persistentvolumes
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - apps
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - jobs
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - ""
+    resources:
+      - pods/log
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - autoscaling/v1
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - autoscaling/v2
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups:
+      - security.openshift.io
+    resourceNames:
+      - privileged
+    resources:
+      - securitycontextconstraints
+    verbs:
+      - use
+  -
+    apiGroups:
+      - policy
     resourceNames:
       - k8sensor
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
 {{- end }}
