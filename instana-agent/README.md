@@ -138,6 +138,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `serviceAccount.create`                             | Whether a ServiceAccount should be created                                                                                                                                                                                                                                                                             | `true`                                                                                                                                  |
 | `serviceAccount.name`                               | Name of the ServiceAccount to use                                                                                                                                                                                                                                                                                      | `instana-agent`                                                                                                                         |
 | `zone.name`                                         | Zone that detected technologies will be assigned to                                                                                                                                                                                                                                                                    | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installing-the-chart) for details                             |
+| `zones`                                         | Multi-zone daemonset configuration.                                                                                                          | `nil` see [below](#multiple-zones) for details                             |
 
 ### Agent Modes
 
@@ -286,7 +287,40 @@ The `instana-agent` and `k8sensor` pods share the same configurations in terms o
 It is advised to use the `k8s_sensor.deployment.enabled=true` mode on clusters of more than 10 nodes, and in that case, you may be able to reduce the amount of resources assigned to the `instana-agent` pods, especially in terms of memory, using the [Agent Pod Sizing](#agent-pod-sizing) settings.
 The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.requests.memory`, `k8s_sensor.deployment.pod.limits.cpu` and `k8s_sensor.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `k8sensor` pods.
 
+### Multiple Zones
+You can list zones to use affinities and tolerations as the basis to associate a specific daemonset per tainted node pool. Each zone will have the following data:
+
+* `name` (required) - zone name.
+* `mode` (optional) - instana agent mode (e.g. APM, INFRASTRUCTURE, etc).
+* `affinity` (optional) - standard kubernetes pod affinity list for the daemonset.
+* `tolerations` (optional) - standard kubernetes pod toleration list for the daemonset.
+
+The following is an example that will create 2 zones an api-server and a worker zone:
+
+```yaml
+zones:
+  - name: workers
+    mode: APM
+  - name: api-server
+    mode: INFRASTRUCTURE
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
+    tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+```
+
 ## Changelog
+
+### 1.2.42
+
+* Add support for creating multiple zones within the same cluster using affinity and tolerations.
 
 ### 1.2.41
 

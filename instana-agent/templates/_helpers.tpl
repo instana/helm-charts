@@ -159,8 +159,10 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{- define "instana-agent.commonEnv" -}}
 - name: INSTANA_AGENT_LEADER_ELECTOR_PORT
   value: {{ .Values.leaderElector.port | quote }}
+{{- if .Values.zone.name }}
 - name: INSTANA_ZONE
   value: {{ .Values.zone.name | quote }}
+{{- end }}
 {{- if .Values.cluster.name }}
 - name: INSTANA_KUBERNETES_CLUSTER_NAME
   valueFrom:
