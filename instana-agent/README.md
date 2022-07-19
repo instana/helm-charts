@@ -318,6 +318,10 @@ zones:
 
 ## Changelog
 
+### 1.2.43
+
+* Bump leader-elector image to v0.5.16 (Update dependencies)
+
 ### 1.2.42
 
 * Add support for creating multiple zones within the same cluster using affinity and tolerations.
