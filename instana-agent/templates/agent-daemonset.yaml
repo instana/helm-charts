@@ -103,8 +103,12 @@ spec:
             - name: machine-id
               mountPath: /etc/machine-id
             - name: configuration
+            {{- if $.Values.agent.configuration.hotreloadEnabled }}
+              mountPath: /root/
+            {{- else }}
               subPath: configuration.yaml
               mountPath: /root/configuration.yaml
+            {{- end }}
             {{- if .Values.agent.tls }}
             {{- if or .Values.agent.tls.secretName (and .Values.agent.tls.certificate .Values.agent.tls.key) }}
               {{- include "instana-agent.tls-volumeMounts" . | nindent 12 }}

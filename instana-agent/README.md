@@ -79,6 +79,7 @@ The following table lists the configurable parameters of the Instana chart and t
 |-----------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `agent.configuration_yaml`                          | Custom content for the agent configuration.yaml file                                                                                                                                                                                                                                                                   | `nil` See [below](#agent) for more details                                                                                              |
 | `agent.configuration.autoMountConfigEntries`        | (Experimental, needs Helm 3.1+) Automatically look up the entries of the default `instana-agent` ConfigMap, and mount as agent configuration files in the `instana-agent` container under the `/opt/instana/agent/etc/instana` directory all ConfigMap entries with keys that match the `configuration-*.yaml` scheme. | `false`                                                                                                                                 |
+| `agent.configuration.hotreloadEnabled`              | Enables hot-reload of a configuration.yaml upon changes in the `instana-agent` ConfigMap without requiring a restart of a pod                                                                                                                                                                                          | `false`                                                                                                                                 |
 | `agent.endpointHost`                                | Instana Agent backend endpoint host                                                                                                                                                                                                                                                                                    | `ingress-red-saas.instana.io` (US and ROW). If in Europe, please override with `ingress-blue-saas.instana.io`                           |
 | `agent.endpointPort`                                | Instana Agent backend endpoint port                                                                                                                                                                                                                                                                                    | `443`                                                                                                                                   |
 | `agent.key`                                         | Your Instana Agent key                                                                                                                                                                                                                                                                                                 | `nil` You must provide your own key unless `agent.keysSecret` is specified                                                              |
@@ -317,6 +318,11 @@ zones:
 ```
 
 ## Changelog
+
+### 1.2.44
+
+* Add support for enabling the hot-reload of `configuration.yaml` when the default `instana-agent` ConfigMap changes
+  * Enablement is done via the flag `--set agent.configuration.hotreloadEnabled=true`
 
 ### 1.2.43
 

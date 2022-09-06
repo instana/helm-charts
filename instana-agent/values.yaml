@@ -126,6 +126,10 @@ agent:
     # IMPORTANT: Editing the ConfigMap adding keys requires a `helm upgrade` to take effect
     autoMountConfigEntries: false
 
+    # When setting this to true, the updates of the default instana-agent ConfigMap
+    # will be reflected in the pod without requiring a pod restart
+    hotreloadEnabled: false
+
   configuration_yaml: |
     # Manual a-priori configuration. Configuration will be only used when the sensor
     # is actually installed by the agent.
