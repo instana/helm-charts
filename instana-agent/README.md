@@ -319,10 +319,14 @@ zones:
 
 ## Changelog
 
+### 1.2.45
+
+* Use agent key secret in k8sensor deployment.
+
 ### 1.2.44
 
 * Add support for enabling the hot-reload of `configuration.yaml` when the default `instana-agent` ConfigMap changes
-  * Enablement is done via the flag `--set agent.configuration.hotreloadEnabled=true`
+* Enablement is done via the flag `--set agent.configuration.hotreloadEnabled=true`
 
 ### 1.2.43
 

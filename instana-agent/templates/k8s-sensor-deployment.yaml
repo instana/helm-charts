@@ -61,7 +61,10 @@ spec:
           imagePullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
           env:
             - name: AGENT_KEY
-              value: {{ .Values.agent.key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "instana-agent.keysSecretName" . }}
+                  key: key
             - name: BACKEND
               valueFrom:
                 configMapKeyRef:
