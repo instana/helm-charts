@@ -1,4 +1,4 @@
-{{- if .Values.k8s_sensor.deployment.enabled -}}
+{{- if and .Values.k8s_sensor.deployment.enabled (not .Values.kubernetes.deployment.enabled) -}}
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -1,4 +1,4 @@
-{{- if and .Values.kubernetes.deployment.enabled (not .Values.k8s_sensor.deployment.enabled) -}}
+{{- if .Values.kubernetes.deployment.enabled -}}
 {{- if or .Values.agent.key .Values.agent.keysSecret -}}
 {{- if or .Values.zone.name .Values.cluster.name -}}
 apiVersion: apps/v1
