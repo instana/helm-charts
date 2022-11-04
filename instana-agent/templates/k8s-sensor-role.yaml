@@ -1,4 +1,4 @@
-{{- if and .Values.k8s_sensor.deployment.enabled (not .Values.kubernetes.deployment.enabled) -}}
+{{- if .Values.k8s_sensor.deployment.enabled -}}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -119,7 +119,6 @@ rules:
       - securitycontextconstraints
     verbs:
       - use
-  {{- if .Values.podSecurityPolicy.enable }}
   -
     apiGroups:
       - policy
@@ -129,5 +128,4 @@ rules:
       - podsecuritypolicies
     verbs:
       - use
-  {{- end }}
 {{- end }}

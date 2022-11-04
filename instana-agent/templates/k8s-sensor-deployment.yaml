@@ -1,4 +1,4 @@
-{{- if and .Values.k8s_sensor.deployment.enabled (not .Values.kubernetes.deployment.enabled) -}}
+{{- if .Values.k8s_sensor.deployment.enabled  -}}
 {{- if or .Values.agent.key .Values.agent.keysSecret -}}
 {{- if or .Values.zone.name .Values.cluster.name -}}
 
@@ -6,10 +6,6 @@
 {{ if .Values.agent.proxyUser }}
   {{- $user_name_password = print .Values.agent.proxyUser ":" .Values.agent.proxyPass "@" -}}
 {{ end}}
-
-{{- if not (empty .Values.agent.proxyHost) }}
-  {{- fail "Cannot use k8sensor with http proxy. Set k8s_sensor.deployment.enabled=false" }}
-{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -99,10 +95,6 @@ spec:
               value: "http://{{ $user_name_password }}{{ .Values.agent.proxyHost }}:{{ .Values.agent.proxyPort }}"
             - name: NO_PROXY
               value: "kubernetes.default.svc"
-            {{- end }}
-            {{- if .Values.agent.redactKubernetesSecrets }}
-            - name: INSTANA_KUBERNETES_REDACT_SECRETS
-              value: {{ .Values.agent.redactKubernetesSecrets | quote }}
             {{- end }}
           volumeMounts:
             {{- include "instana-agent.commonVolumeMounts" . | nindent 12 }}
