@@ -119,6 +119,7 @@ rules:
       - securitycontextconstraints
     verbs:
       - use
+  {{ if .Values.podSecurityPolicy.enable }}
   -
     apiGroups:
       - policy
@@ -128,4 +129,5 @@ rules:
       - podsecuritypolicies
     verbs:
       - use
+  {{ end }}
 {{- end }}

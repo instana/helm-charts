@@ -96,6 +96,10 @@ spec:
             - name: NO_PROXY
               value: "kubernetes.default.svc"
             {{- end }}
+            {{- if .Values.agent.redactKubernetesSecrets }}
+            - name: INSTANA_KUBERNETES_REDACT_SECRETS
+              value: {{ .Values.agent.redactKubernetesSecrets | quote }}
+            {{- end }}
           volumeMounts:
             {{- include "instana-agent.commonVolumeMounts" . | nindent 12 }}
             - name: kubernetes-sensor-configuration

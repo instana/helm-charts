@@ -319,6 +319,11 @@ zones:
 
 ## Changelog
 
+### 1.2.48
+
+* Set env var INSTANA_KUBERNETES_REDACT_SECRETS true if agent.redactKubernetesSecrets is enabled.
+* Use feature PSP flag in k8sensor ClusterRole only when podsecuritypolicy.enable is true.
+
 ### 1.2.47
 
 * Roll back the changes from version 1.2.46 to be compatible with the Agent Operator installation
@@ -327,7 +332,7 @@ zones:
 
 * Use K8sensor by default.
 * kubernetes.deployment.enabled setting overrides k8s_sensor.deployment.enabled setting.
-* Use feature PSP flag in k8sensor ClusterRole only when podsecuritypolicy.enabe is true.
+* Use feature PSP flag in k8sensor ClusterRole only when podsecuritypolicy.enable is true.
 * Throw failure if customer specifies proxy with k8sensor.
 * Set env var INSTANA_KUBERNETES_REDACT_SECRETS true if agent.redactKubernetesSecrets is enabled.
 
