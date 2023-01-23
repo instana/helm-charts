@@ -1,4 +1,4 @@
-{{- if or .Values.service.create (or (eq "true" (include "instana-agent.opentelemetry.grpc.isEnabled" .)) (eq "true" (include "instana-agent.opentelemetry.http.isEnabled" .)) .Values.prometheus.remoteWrite.enabled ) -}}
+{{- if or .Values.service.create (eq "true" (include "instana-agent.opentelemetry.grpc.isEnabled" .)) (eq "true" (include "instana-agent.opentelemetry.http.isEnabled" .)) .Values.prometheus.remoteWrite.enabled -}}
 ---
 apiVersion: v1
 kind: Service
