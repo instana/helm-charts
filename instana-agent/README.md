@@ -334,6 +334,10 @@ zones:
 ```
 
 ## Changelog
+### 1.2.64
+* Add settings override for k8s-sensor affinity
+* Add optional pod disruption budget for k8s-sensor
+
 ### 1.2.63
 * Add RBAC required to allow access to /metrics end-points.
 
