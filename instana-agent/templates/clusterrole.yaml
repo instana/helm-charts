@@ -68,11 +68,13 @@ rules:
   resources:
     - "deploymentconfigs"
   verbs: ["get", "list", "watch"]
+{{- end -}}
+{{- end }}
+{{- if or .Values.openshift (.Capabilities.APIVersions.Has "apps.openshift.io/v1") }}
 - apiGroups: ["security.openshift.io"]
   resourceNames: ["privileged"]
   resources: ["securitycontextconstraints"]
   verbs: ["use"]
-{{- end -}}
 {{- end }}
 {{- if .Values.podSecurityPolicy.enable}}
 {{- if semverCompare "< 1.25.x" (include "kubeVersion" .) }}

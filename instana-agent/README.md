@@ -343,7 +343,12 @@ zones:
 
 ## Changelog
 
+### 1.2.65
+
+* Ensure we have appropriate SCC when running with new K8s sensor.
+
 ### 1.2.64
+
 * Remove RBAC not required by agent when kubernetes-sensor is disabed.
 * Add settings override for k8s-sensor affinity
 * Add optional pod disruption budget for k8s-sensor
