@@ -4,7 +4,7 @@
 
 {{- $user_name_password := "" -}}
 {{ if .Values.agent.proxyUser }}
-  {{- $user_name_password = print .Values.agent.proxyUser ":" .Values.agent.proxyPass "@" -}}
+  {{- $user_name_password = print .Values.agent.proxyUser ":" .Values.agent.proxyPassword "@" -}}
 {{ end}}
 
 apiVersion: apps/v1
