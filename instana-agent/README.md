@@ -360,6 +360,10 @@ zones:
 
 ## Changelog
 
+### 1.2.68
+
+* Add possibility to set annotations for the serviceAccount.
+
 ### 1.2.67
 
 * Fix variable name in the K8s deployment
