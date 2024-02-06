@@ -141,6 +141,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `zones`                                             | Multi-zone daemonset configuration.                                                                                                                                                                                                                                                                                    | `nil` see [below](#multiple-zones) for details                                                                                          |
 | `k8s_sensor.podDisruptionBudget.enabled`            | Whether to create DisruptionBudget for k8sensor to limit the number of concurrent disruptions                                                                                                                                                                                                                          | `false`                                                                                                                                 |
 | `k8s_sensor.deployment.pod.affinity`                | `k8sensor` deployment affinity format                                                                                                                                                                                                                                                                                  | `podAntiAffinity` defined in `values.yaml`                                                                                              |
+| `k8s_sensor.deployment.pod.topologySpreadConstraints`                | `k8sensor` deployment topology spread constraints format                                                                                                                                                                                                                                                                                  | `topologySpreadConstraints` defined in `values.yaml`                                                                                              |
 
 ### Agent Modes
 
@@ -358,6 +359,10 @@ zones:
 ```
 
 ## Changelog
+
+### 1.2.68
+
+* Add best effort topology spread constraints for k8sensor deployment
 
 ### 1.2.67
 
