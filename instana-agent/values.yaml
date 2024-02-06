@@ -262,6 +262,8 @@ k8s_sensor:
   podDisruptionBudget:
     # Specifies whether or not to setup a pod disruption budget for the k8sensor deployment
     enabled: false
+    minAvailable: 1
+    maxUnavailable: null
 
 kubernetes:
   # Configures use of a Deployment for the Kubernetes sensor rather than as a potential member of the DaemonSet. Is only accepted if k8s_sensor.deployment.enabled=false
