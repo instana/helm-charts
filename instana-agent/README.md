@@ -139,7 +139,12 @@ The following table lists the configurable parameters of the Instana chart and t
 | `serviceAccount.name`                               | Name of the ServiceAccount to use                                                                                                                                                                                                                                                                                      | `instana-agent`                                                                                                                         |
 | `zone.name`                                         | Zone that detected technologies will be assigned to                                                                                                                                                                                                                                                                    | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installation) for details                                     |
 | `zones`                                             | Multi-zone daemonset configuration.                                                                                                                                                                                                                                                                                    | `nil` see [below](#multiple-zones) for details                                                                                          |
-| `k8s_sensor.podDisruptionBudget.enabled`            | Whether to create DisruptionBudget for k8sensor to limit the number of concurrent disruptions                                                                                                                                                                                                                          | `false`                                                                                                                                 |
+| `k8s_sensor.podDisruptionBudget.enabled`            | Whether to create DisruptionBudget for k8sensor to limit the number of concurrent disruptions                                                                                                                                                                                                                          | 
+`false`                                                                                                                                 |
+| `k8s_sensor.podDisruptionBudget.minAvailable`            | Number or percentage of pods that must still be available after the eviction.                                                                                                                                                                                                                          |
+`1`                                                                                                                                 |
+| `k8s_sensor.podDisruptionBudget.maxUnavailable`            | Number or percentage of pods that can be unavailable after the eviction.                                                                                                                                                                                                                          |
+`null`                                                                                                                                 |
 | `k8s_sensor.deployment.pod.affinity`                | `k8sensor` deployment affinity format                                                                                                                                                                                                                                                                                  | `podAntiAffinity` defined in `values.yaml`                                                                                              |
 
 ### Agent Modes
@@ -358,6 +363,10 @@ zones:
 ```
 
 ## Changelog
+
+### 1.2.68
+
+* Allow configuration of k8s_sensor pod disruption budget
 
 ### 1.2.67
 

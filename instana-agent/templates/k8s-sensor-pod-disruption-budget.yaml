@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       {{- include "k8s-sensor.selectorLabels" . | nindent 6 }}
-  minAvailable: {{ sub (int .Values.k8s_sensor.deployment.replicas) 1 }}
+  minAvailable: {{ .Values.k8s_sensor.podDisruptionBudget.minAvailable }}
+  maxUnavailable: {{ .Values.k8s_sensor.podDisruptionBudget.maxUnavailable }}
 {{- end -}}
 {{- end -}}
