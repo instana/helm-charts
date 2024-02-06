@@ -259,6 +259,23 @@ k8s_sensor:
                   operator: In
                   values: [ KUBERNETES ]
               topologyKey: "kubernetes.io/hostname"
+      # k8s_sensor.deployment.pod.topologySpreadConstraints are constraints to influence how pods are distributed accross nodes
+      # https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: instana-agent
+              app: k8sensor
+          maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: instana-agent
+              app: k8sensor
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
   podDisruptionBudget:
     # Specifies whether or not to setup a pod disruption budget for the k8sensor deployment
     enabled: false
