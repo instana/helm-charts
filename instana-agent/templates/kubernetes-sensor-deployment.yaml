@@ -13,6 +13,7 @@ spec:
   selector:
     matchLabels:
       {{- include "instana-agent.selectorLabels" . | nindent 6 }}
+  minReadySeconds: {{ .Values.agent.minReadySeconds }}
   template:
     metadata:
       labels:

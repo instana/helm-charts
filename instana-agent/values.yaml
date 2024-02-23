@@ -60,6 +60,9 @@ agent:
     # If you want no imagePullSecrets to be specified in the agent pod, you can just pass an empty array to agent.image.pullSecrets
     # pullSecrets: []
 
+  # The minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available
+  minReadySeconds: 0
+
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
