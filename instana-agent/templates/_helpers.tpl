@@ -270,6 +270,8 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{- end -}}
 
 {{- define "instana-agent.commonVolumeMounts" -}}
+- name: tmp
+  mountPath: /tmp
 {{- if .Values.agent.host.repository }}
 - name: repo
   mountPath: /opt/instana/agent/data/repo
@@ -285,6 +287,8 @@ Composes a container image from a dict containing a "name" field (required), "ta
 {{- end -}}
 
 {{- define "instana-agent.commonVolumes" -}}
+- name: tmp
+  emptyDir: {}
 - name: configuration
   configMap:
     name: {{ include "instana-agent.fullname" . }}
