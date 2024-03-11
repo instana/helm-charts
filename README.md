@@ -8,7 +8,7 @@ You find these Helm charts on [![Artifact HUB](https://img.shields.io/endpoint?u
 ## How to use these Charts
 
 Each chart has its own `README.md` with instructions.
-Additional information may be available in the [Instana documentation](https://www.instana.com/docs/setup_and_manage/host_agent/on/kubernetes/#install-using-the-helm-chart).
+Additional information may be available in the [Instana documentation](https://www.ibm.com/docs/en/instana-observability/current?topic=agents-installing-host-agent-kubernetes#install-by-using-the-helm-chart).
 
 ## Contributing
 
@@ -17,4 +17,4 @@ Please be aware that your contributions can be accepted only if you agree with t
 
 ## Support
 
-If you need support with using these charts or you would like to request new functionality embedded in them, please [open a support ticket](https://support.instana.com/hc/en-us/requests/new).
+If you need support with using these charts, please [open a support ticket](https://www.ibm.com/support/pages/instana-support).
