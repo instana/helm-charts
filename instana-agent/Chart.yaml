@@ -1,11 +1,11 @@
 annotations:
   artifacthub.io/links: |
     - name: Instana website
-      url: https://www.instana.com
+      url: https://www.ibm.com/products/instana
     - name: Instana Helm charts
       url: https://github.com/instana/helm-charts
 apiVersion: v2
-appVersion: 1.268.0
+appVersion: 1.270.0
 description: Instana Agent for Kubernetes
 home: https://www.instana.com/
 icon: https://agents.instana.io/helm/stan-logo-2020.png
@@ -19,4 +19,4 @@ maintainers:
 name: instana-agent
 sources:
 - https://github.com/instana/instana-agent-docker
-version: 1.2.71
+version: 1.2.72
