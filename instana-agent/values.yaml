@@ -205,12 +205,12 @@ service:
   # Note: Requires Kubernetes 1.17+, as it uses topologyKeys
   create: true
 
-#opentelemetry:
+opentelemetry:
 #  enabled: false # legacy setting, will only enable grpc, defaults to false
-#  grpc:
-#    enabled: false # takes precedence over legacy settings above, defaults to true if "grpc:" is present
-#  http:
-#    enabled: false # allows to enable http endpoints, defaults to true if "http:" is present
+  grpc:
+    enabled: true # takes precedence over legacy settings above, defaults to true if "grpc:" is present
+  http:
+    enabled: true # allows to enable http endpoints, defaults to true if "http:" is present
 
 prometheus:
   remoteWrite:
