@@ -57,6 +57,11 @@ spec:
         - name: instana-agent
           image: {{ include "image" .Values.k8s_sensor.image | quote }}
           imagePullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
+          command:
+          - /ko-app/k8sensor
+          args:
+          - -pollrate
+          - 10s
           env:
             - name: AGENT_KEY
               valueFrom:
