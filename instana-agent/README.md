@@ -17,21 +17,48 @@ To configure the installation you can either specify the options on the command 
 First, create a namespace for the instana-agent
 
 ```bash
-kubectl create namespace instana-agent
+$ kubectl create namespace instana-agent
+```
+
+**OpenShift:** When targetting an OpenShift 4.x cluster, ensure proper permission before installing the helm chart, otherwise the agent pods will not be scheduled correctly.
+
+```bash
+$ oc adm policy add-scc-to-user privileged -z instana-agent
 ```
 
 To install the chart with the release name `instana-agent` and set the values on the command line run:
 
 ```bash
-$ helm install instana-agent --namespace instana-agent \
+$ helm install instana-agent \
+--namespace instana-agent \
 --repo https://agents.instana.io/helm \
 --set agent.key=INSTANA_AGENT_KEY \
 --set agent.endpointHost=HOST \
 --set zone.name=ZONE_NAME \
+--set cluster.name="CLUSTER_NAME" \
 instana-agent
 ```
 
-**OpenShift:** When targetting an OpenShift 4.x cluster, add `--set openshift=true`.
+## Upgrade
+
+The helm chart deploys a Kubernetes Operator internally that reconciles the agent resources based on an agent CustomResource (CR) that is created based on the helm values. As the Operator pattern requires a CustomResourceDefinition (CRD) to be present in the cluster before defining any CRs, the CRD definition is included in the helm chart. On initial installations the chart deploys the CRD before submitting the rest of the artifacts.
+
+Helm has known limitations around handling the CRD lifecycle as outlined in their [documentation](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/).
+
+This leads to the problem, that CRD updates are only submitted to the Cluster on **initial installation**, but **NOT applied automatically during upgrades**.
+
+It is also worth noting, that CRDs must be removed manually if the chart should be removed completly, see more details in the [uninstall](#uninstallation) section.
+
+To ensure a proper update, apply the CRD updates before running the upgrade:
+
+```
+helm pull --repo https://agents.instana.io/helm --untar instana-agent; kubectl apply -f instana-agent/crds; helm upgrade instana-agent instana-agent \
+  --namespace instana-agent \
+  --repo https://agents.instana.io/helm \
+  --reuse-values
+```
+
+This is especially important when migrating from helm charts v1 to v2, as the upgrade will fail otherwise as the CR artifact cannot be created.
 
 ### Required Settings
 
@@ -68,7 +95,8 @@ If you omit `zone.name`, the host zone will be automatically determined by the a
 To uninstall/delete the `instana-agent` release:
 
 ```bash
-helm del instana-agent -n instana-agent
+helm uninstall instana-agent -n instana-agent && kubectl patch agent instana-agent -p '{"metadata":{"finalizers":null}}' --type=merge &&
+kubectl delete crd/agents.instana.io
 ```
 
 ## Configuration Reference
@@ -78,8 +106,6 @@ The following table lists the configurable parameters of the Instana chart and t
 | Parameter                                           | Description                                                                                                                                                                                                                                                                                                            | Default                                                                                                                                 |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `agent.configuration_yaml`                          | Custom content for the agent configuration.yaml file                                                                                                                                                                                                                                                                   | `nil` See [below](#agent-configuration) for more details                                                                                |
-| `agent.configuration.autoMountConfigEntries`        | (Experimental, needs Helm 3.1+) Automatically look up the entries of the default `instana-agent` ConfigMap, and mount as agent configuration files in the `instana-agent` container under the `/opt/instana/agent/etc/instana` directory all ConfigMap entries with keys that match the `configuration-*.yaml` scheme. | `false`                                                                                                                                 |
-| `agent.configuration.hotreloadEnabled`              | Enables hot-reload of a configuration.yaml upon changes in the `instana-agent` ConfigMap without requiring a restart of a pod                                                                                                                                                                                          | `false`                                                                                                                                 |
 | `agent.endpointHost`                                | Instana Agent backend endpoint host                                                                                                                                                                                                                                                                                    | `ingress-red-saas.instana.io` (US and ROW). If in Europe, please override with `ingress-blue-saas.instana.io`                           |
 | `agent.endpointPort`                                | Instana Agent backend endpoint port                                                                                                                                                                                                                                                                                    | `443`                                                                                                                                   |
 | `agent.key`                                         | Your Instana Agent key                                                                                                                                                                                                                                                                                                 | `nil` You must provide your own key unless `agent.keysSecret` is specified                                                              |
@@ -121,10 +147,6 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.env`                                         | Additional environment variables for the agent                                                                                                                                                                                                                                                                         | `{}`                                                                                                                                    |
 | `agent.redactKubernetesSecrets`                     | Enable additional secrets redaction for selected Kubernetes resources                                                                                                                                                                                                                                                  | `nil` See [Kubernetes secrets](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#secrets) for more details.            |
 | `cluster.name`                                      | Display name of the monitored cluster                                                                                                                                                                                                                                                                                  | Value of `zone.name`                                                                                                                    |
-| `leaderElector.port`                                | Instana leader elector sidecar port                                                                                                                                                                                                                                                                                    | `42655`                                                                                                                                 |
-| `leaderElector.image.name`                          | The elector image name to pull. _Note: leader-elector is deprecated and will no longer be updated._                                                                                                                                                                                                                    | `instana/leader-elector`                                                                                                                |
-| `leaderElector.image.digest`                        | The image digest to pull; if specified, it causes `leaderElector.image.tag` to be ignored.  _Note: leader-elector is deprecated and will no longer be updated._                                                                                                                                                        | `nil`                                                                                                                                   |
-| `leaderElector.image.tag`                           | The image tag to pull; this property is ignored if `leaderElector.image.digest` is specified.  _Note: leader-elector is deprecated and will no longer be updated._                                                                                                                                                     | `latest`                                                                                                                                |
 | `k8s_sensor.deployment.enabled`                     | Isolate k8sensor with a deployment                                                                                                                                                                                                                                                                                     |
 | `k8s_sensor.deployment.minReadySeconds`             | The minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available                                                                                                                                                                  | `0`                                                                                                                                     | `true` |
 | `k8s_sensor.image.name`                             | The k8sensor image name to pull                                                                                                                                                                                                                                                                                        | `gcr.io/instana/k8sensor`                                                                                                               |
@@ -137,7 +159,6 @@ The following table lists the configurable parameters of the Instana chart and t
 | `podSecurityPolicy.enable`                          | Whether a PodSecurityPolicy should be authorized for the Instana Agent pods. Requires `rbac.create` to be `true` as well and it is available until Kubernetes version v1.25.                                                                                                                                           | `false` See [PodSecurityPolicy](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#podsecuritypolicy) for more details. |
 | `podSecurityPolicy.name`                            | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you.                                                                                                                                | `nil`                                                                                                                                   |
 | `rbac.create`                                       | Whether RBAC resources should be created                                                                                                                                                                                                                                                                               | `true`                                                                                                                                  |
-| `openshift`                                         | Whether to install the Helm chart as needed in OpenShift; this setting implies `rbac.create=true`                                                                                                                                                                                                                      | `false`                                                                                                                                 |
 | `opentelemetry.grpc.enabled`                        | Whether to configure the agent to accept telemetry from OpenTelemetry applications via gRPC. This option also implies `service.create=true`, and requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`.                                                                                                   | `true`                                                                                                                                  |
 | `opentelemetry.http.enabled`                        | Whether to configure the agent to accept telemetry from OpenTelemetry applications via HTTP. This option also implies `service.create=true`, and requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`.                                                                                                   | `true`                                                                                                                                  |
 | `prometheus.remoteWrite.enabled`                    | Whether to configure the agent to accept metrics over its implementation of the `remote_write` Prometheus endpoint. This option also implies `service.create=true`, and requires Kubernetes 1.21+, as it relies on `internalTrafficPolicy`.                                                                            | `false`                                                                                                                                 |
@@ -301,39 +322,15 @@ These options will be rarely used outside of development or debugging of the age
 
 ### Kubernetes Sensor Deployment
 
- _Note: leader-elector and kubernetes sensor is deprecated and will no longer be updated. Instead, k8s_sensor should be used._
+ _Note: leader-elector and kubernetes sensor are fully deprecated and can no longer be chosen. Instead, the k8s_sensor will be used._
 
-The data about Kubernetes resources is collected by the Kubernetes sensor in the Instana agent.
-With default configurations, only one Instana agent at any one time is capturing the bulk of Kubernetes data.
-Which agent gets the task is coordinated by a leader elector mechanism running inside the `leader-elector` container of the `instana-agent` pods.
-However, on large Kubernetes clusters, the load on the one Instana agent that fetches the Kubernetes data can be substantial and, to some extent, has lead to rather "generous" resource requests and limits for all the Instana agents across the cluster, as any one of them could become the leader at some point.
-
-The Helm chart has a special mode, enabled by setting `k8s_sensor.deployment.enabled=true`, that will actually schedule additional Instana agents running _only_ the Kubernetes sensor that run in a dedicated `k8sensor` Deployment inside the `instana-agent` namespace.
+The Helm chart will schedule additional Instana agents running _only_ the Kubernetes sensor that runs in a dedicated `k8sensor` Deployment inside the `instana-agent` namespace.
 The pods containing agents that run only the Kubernetes sensor are called `k8sensor` pods.
 When `k8s_sensor.deployment.enabled=true`, the `instana-agent` pods running inside the daemonset do _not_ contain the `leader-elector` container, which is instead scheduled inside the `k8sensor` pods.
 
 The `instana-agent` and `k8sensor` pods share the same configurations in terms of backend-related configurations (including [additional backends](#configuring-additional-backends)).
 
-It is advised to use the `k8s_sensor.deployment.enabled=true` mode on clusters of more than 10 nodes, and in that case, you may be able to reduce the amount of resources assigned to the `instana-agent` pods, especially in terms of memory, using the [Agent Pod Sizing](#agent-pod-sizing) settings.
-The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.requests.memory`, `k8s_sensor.deployment.pod.limits.cpu` and `k8s_sensor.deployment.pod.limits.memory` settings, on the other hand, allows you to change the sizing of the `k8sensor` pods.
-
-#### Determine Special Mode Enabled
-
-To determine if Kubernetes sensor is running in a decidated `k8sensor` deployment, list deployments in the `instana-agent` namespace.
-
-```
-kubectl get deployments -n instana-agent
-```
-
-If it shows `k8sensor` in the list, then the special mode is enabled
-
-#### Upgrade Kubernetes Sensor
-
-To upgrade the kubernetes sensor to the lastest version, perform a rolling restart of the `k8sensor` deployment using the following command:
-
-```
-kubectl rollout restart deployment k8sensor -n instana-agent
-```
+The `k8s_sensor.deployment.pod.requests.cpu`, `k8s_sensor.deployment.pod.requests.memory`, `k8s_sensor.deployment.pod.limits.cpu` and `k8s_sensor.deployment.pod.limits.memory` settings, allow you to change the sizing of the `k8sensor` pods.
 
 ### Multiple Zones
 
@@ -366,6 +363,12 @@ zones:
 ```
 
 ## Changelog
+
+### 2.0.0
+
+* Deploy the instana-agent operator instead of managing agent artifacts directly
+* Always use the k8sensor, the deprecated kubernetes sensor is no longer supported (this is an internal change, Kubernetes clusters will still report into the Instana backend)
+* BREAKING CHANGE: Due to limitations of helm to manage Custom Resource Definition (CRD) updates, the upgrade requires to apply the CRD from the helm chart crds folder manually. Find more details in the [upgrade](#upgrade) section.
 
 ### 1.2.74
 

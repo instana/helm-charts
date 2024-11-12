@@ -60,6 +60,8 @@ This agent deployment will be incomplete until you set your agent key:
 - YOUR_SECRET_AGENT_KEY can be obtained from the Management Portal section of your Instana installation.
 
 {{- else -}}
+Ensure to run `oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent` if running on OCP, otherwise agent pods will not be scheduled correctly.
+
 It may take a few moments for the agents to fully deploy. You can see what agents are running by listing resources in the {{ .Release.Namespace }} namespace:
 
     kubectl get all -n {{ .Release.Namespace }}
