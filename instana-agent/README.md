@@ -364,6 +364,10 @@ zones:
 
 ## Changelog
 
+### 2.0.1
+
+* Fix rendering of the `spec.agent.env`, `spec.configuration_yaml`, `spec.agent.image.pullSecrets`
+
 ### 2.0.0
 
 * Deploy the instana-agent operator instead of managing agent artifacts directly

@@ -64,7 +64,8 @@ spec:
       pullPolicy: {{ .Values.agent.image.pullPolicy }}
 {{- end }}
 {{- if .Values.agent.image.pullSecrets }}
-      pullSecrets: {{ .Values.agent.image.pullSecrets }}
+      pullSecrets:
+{{- toYaml $.Values.agent.image.pullSecrets | nindent 6 }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -105,6 +106,7 @@ spec:
 {{- if .Values.agent.pod.priorityClassName }}
       priorityClassName: {{ .Values.agent.pod.priorityClassName }}
 {{- end }}
+{{- if .Values.agent.pod.requests }}
 {{- if or .Values.agent.pod.requests.memory .Values.agent.pod.requests.cpu }}
       requests:
 {{- if .Values.agent.pod.requests.memory }}
@@ -114,6 +116,8 @@ spec:
         cpu: {{ .Values.agent.pod.requests.cpu | quote }}
 {{- end }}
 {{- end }}
+{{- end }}
+{{- if .Values.agent.pod.limits }}
 {{- if or .Values.agent.pod.limits.memory .Values.agent.pod.limits.cpu }}
       limits:
 {{- if .Values.agent.pod.limits.memory }}
@@ -125,6 +129,7 @@ spec:
 {{- if .Values.agent.pod.nodeSelector }}
       nodeSelector:
       {{- toYaml $.Values.agent.pod.nodeSelector | nindent 8 }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -148,10 +153,11 @@ spec:
     proxyUseDNS: {{ .Values.agent.proxyUseDNS }}
 {{- end }}
 {{- if .Values.agent.env }}
-    env: {{ .Values.agent.env }}
+    env:
+{{ toYaml .Values.agent.env | indent 6 }}
 {{- end }}
 {{- if .Values.agent.configuration_yaml }}
-    configuration_yaml: {{ .Values.agent.configuration_yaml }}
+    configuration_yaml: {{ toYaml .Values.agent.configuration_yaml }}
 {{- end }}
 {{- if and .Values.agent.host .Values.agent.host.repository }}
     host:

@@ -16,7 +16,19 @@ maintainers:
   name: htreu
 - email: konrad.ohms@de.ibm.com
   name: Konrad-Ohms
+- email: fredrik.gundersen@ibm.com
+  name: FredrikAtIBM
+- email: jefiyamj@ibm.com
+  name: Jefiya-MJ
+- email: milica.cvrkota@ibm.com
+  name: Milica-Cvrkota-IBM
+- email: Nagaraj.Kandoor@ibm.com
+  name: nagaraj-kandoor
+- email: Vineeth.Soman@ibm.com
+  name: vineethsoman03
+- email: Rashmi.Swamy@ibm.com
+  name: rashmiswamyibm
 name: instana-agent
 sources:
 - https://github.com/instana/instana-agent-docker
-version: 2.0.0
+version: 2.0.1
