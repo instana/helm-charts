@@ -29,10 +29,24 @@ spec:
     listenAddress: {{ .Values.agent.listenAddress }}
 {{- end }}
     endpointHost: {{ .Values.agent.endpointHost }}
+    {{- if eq (typeOf .Values.agent.endpointPort) "string" }}
+    endpointPort: {{ .Values.agent.endpointPort }}
+    {{- else }}
     endpointPort: {{ .Values.agent.endpointPort | quote }}
+    {{- end }}
 {{- if .Values.agent.additionalBackends }}
     additionalBackends:
-    {{- toYaml $.Values.agent.additionalBackends | nindent 6 }}
+{{- range $.Values.agent.additionalBackends }}
+    - endpointHost: {{ .endpointHost }}
+      {{- if eq (typeOf .endpointPort) "string" }}
+      endpointPort: {{ .endpointPort }}
+      {{- else }}
+      endpointPort: {{ .endpointPort | quote }}
+      {{- end }}
+      {{- if .key }}
+      key: {{ .key }}
+      {{- end }}
+{{- end }}
 {{- end }}
 {{- if .Values.agent.tls }}
 {{- if or .Values.agent.tls.secretName (and .Values.agent.tls.certificate .Values.agent.tls.key) }}
@@ -154,10 +168,18 @@ spec:
 {{- end }}
 {{- if .Values.agent.env }}
     env:
-{{ toYaml .Values.agent.env | indent 6 }}
+{{- range $key, $value := .Values.agent.env }}
+        {{- if eq (typeOf $value) "string" }}
+        {{ $key }}: {{ $value }}
+        {{- else }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+{{- end }}
 {{- end }}
 {{- if .Values.agent.configuration_yaml }}
-    configuration_yaml: {{ toYaml .Values.agent.configuration_yaml }}
+{{ $configuration_yaml_string := .Values.agent.configuration_yaml }}
+    configuration_yaml: |-
+{{ $configuration_yaml_string | indent 6}}
 {{- end }}
 {{- if and .Values.agent.host .Values.agent.host.repository }}
     host:
