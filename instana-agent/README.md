@@ -184,10 +184,7 @@ For more information on agent modes, refer to the [Host Agent Modes](https://www
 
 Besides the settings listed above, there are many more settings that can be applied to the agent via the so-called "Agent Configuration File", often also referred to as `configuration.yaml` file.
 An overview of the settings that can be applied is provided in the [Agent Configuration File](https://www.instana.com/docs/setup_and_manage/host_agent/configuration#agent-configuration-file) documentation.
-To configure the agent, you can either:
-
-* edit the [config map](templates/agent-configmap.yaml), or
-* provide the configuration via the `agent.configuration_yaml` parameter in [values.yaml](values.yaml)
+To configure the agent, you need to provide the configuration via the `agent.configuration_yaml` parameter in [values.yaml](values.yaml). As all other settings, the Agent configuration is handled by the Operator and stored in Kubernetes Secret resources internally. This way, even plain text passwords are not exposed in any configmap after deployment.
 
 This configuration will be used for all Instana Agents on all nodes. Visit the [agent configuration documentation](https://docs.instana.io/setup_and_manage/host_agent/#agent-configuration-file) for more details on configuration options.
 
@@ -363,6 +360,14 @@ zones:
 ```
 
 ## Changelog
+
+### 2.0.3
+
+* Fix k8sensor deployment rendering
+
+### 2.0.2
+
+* Hardening for endpointPort and configuration parsing
 
 ### 2.0.1
 

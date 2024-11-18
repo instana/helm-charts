@@ -256,6 +256,7 @@ spec:
 {{- if .Values.k8s_sensor.image.pullPolicy }}
       pullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
 {{- end }}
+{{- end }}
 {{- if .Values.k8s_sensor.deployment }}
     deployment:
     {{- toYaml $.Values.k8s_sensor.deployment | nindent 6 }}
@@ -263,7 +264,6 @@ spec:
 {{- if .Values.k8s_sensor.podDisruptionBudget }}
     podDisruptionBudget:
     {{- toYaml $.Values.k8s_sensor.podDisruptionBudget | nindent 6 }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
