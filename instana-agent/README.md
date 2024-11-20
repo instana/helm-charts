@@ -361,6 +361,10 @@ zones:
 
 ## Changelog
 
+### 2.0.4
+
+* Update to operator v2.1.10: Add roles for node metrics and stats for k8sensor
+
 ### 2.0.3
 
 * Fix k8sensor deployment rendering
