@@ -64,6 +64,15 @@ spec:
                           - endpointPort
                         type: object
                       type: array
+                    agentReleaseRepoMirrorPassword:
+                      description: Sets the AGENT_RELEASE_REPOSITORY_MIRROR_PASSWORD environment variable
+                      type: string
+                    agentReleaseRepoMirrorUrl:
+                      description: Sets the AGENT_RELEASE_REPOSITORY_MIRROR_URL environment variable
+                      type: string
+                    agentReleaseRepoMirrorUsername:
+                      description: Sets the AGENT_RELEASE_REPOSITORY_MIRROR_USERNAME environment variable
+                      type: string
                     configuration_yaml:
                       description: Supply Agent configuration e.g. for configuring certain Sensors.
                       type: string
@@ -133,15 +142,6 @@ spec:
                           description: Tag is the name of the agent container image; if `agent.image.digest` is specified, this property is ignored.
                           type: string
                       type: object
-                    instanaFeaturesRepoMirrorPassword:
-                      description: Sets the INSTANA_FEATURES_REPOSITORY_MIRROR_PASSWORD environment variable
-                      type: string
-                    instanaFeaturesRepoMirrorUrl:
-                      description: Sets the INSTANA_FEATURES_REPOSITORY_MIRROR_URL environment variable
-                      type: string
-                    instanaFeaturesRepoMirrorUsername:
-                      description: Sets the INSTANA_FEATURES_REPOSITORY_MIRROR_USERNAME environment variable
-                      type: string
                     instanaMvnRepoFeaturesPath:
                       description: Sets the INSTANA_MVN_REPOSITORY_FEATURES_PATH environment variable
                       type: string
