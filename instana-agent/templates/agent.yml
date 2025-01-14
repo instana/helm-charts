@@ -192,13 +192,13 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.opentelemetry }}
-{{- if or .Values.opentelemetry.grpc .Values.opentelemetry.http }}
+{{- if or ( and (hasKey .Values.opentelemetry "grpc") (hasKey .Values.opentelemetry.grpc "enabled")) ( and (hasKey .Values.opentelemetry "http") (hasKey .Values.opentelemetry.http "enabled")) }}
   opentelemetry:
-{{- if .Values.opentelemetry.grpc.enabled }}
+{{- if and (hasKey .Values.opentelemetry "grpc") (hasKey .Values.opentelemetry.grpc "enabled") }}
     grpc:
       enabled: {{ .Values.opentelemetry.grpc.enabled }}
 {{- end }}
-{{- if .Values.opentelemetry.http.enabled }}
+{{- if and (hasKey .Values.opentelemetry "http") (hasKey .Values.opentelemetry.http "enabled") }}
     http:
       enabled: {{ .Values.opentelemetry.http.enabled }}
 {{- end }}

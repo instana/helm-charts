@@ -367,6 +367,11 @@ zones:
 
 ## Changelog
 
+### 2.0.7
+
+* Fix handling of opentelemetry settings, if `spec.opentelemetry.grpc.enabled` or `spec.opentelemetry.http.enabled` are set to false
+* Update operator to v2.1.13
+
 ### 2.0.6
 
 * Rename flags for the agent repository mirror configuration
