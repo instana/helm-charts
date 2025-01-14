@@ -99,53 +99,61 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.agent.pod }}
-{{- if or .Values.agent.pod.annotations .Values.agent.pod.labels .Values.agent.pod.tolerations .Values.agent.pod.affinity .Values.agent.pod.priorityClassName .Values.agent.pod.requests .Values.agent.pod.limits .Values.agent.pod.nodeSelector }}
+{{- if or .Values.agent.pod.annotations .Values.agent.pod.labels .Values.agent.pod.tolerations .Values.agent.pod.affinity .Values.agent.pod.priorityClassName .Values.agent.pod.requests .Values.agent.pod.limits .Values.agent.pod.nodeSelector .Values.agent.pod.volumeMounts .Values.agent.pod.mounts }}
     pod:
-{{- if .Values.agent.pod.annotations }}
+    {{- if .Values.agent.pod.annotations }}
       annotations:
       {{- toYaml $.Values.agent.pod.annotations | nindent 8 }}
-{{- end }}
-{{- if .Values.agent.pod.labels }}
+    {{- end }}
+    {{- if .Values.agent.pod.labels }}
       labels:
       {{- toYaml $.Values.agent.pod.labels | nindent 8 }}
-{{- end }}
-{{- if .Values.agent.pod.tolerations }}
+    {{- end }}
+    {{- if .Values.agent.pod.tolerations }}
       tolerations:
       {{- toYaml $.Values.agent.pod.tolerations | nindent 8 }}
-{{- end }}
-{{- if .Values.agent.pod.affinity }}
+    {{- end }}
+    {{- if .Values.agent.pod.affinity }}
       affinity:
       {{- toYaml $.Values.agent.pod.affinity | nindent 8 }}
-{{- end }}
-{{- if .Values.agent.pod.priorityClassName }}
+    {{- end }}
+    {{- if .Values.agent.pod.priorityClassName }}
       priorityClassName: {{ .Values.agent.pod.priorityClassName }}
-{{- end }}
-{{- if .Values.agent.pod.requests }}
-{{- if or .Values.agent.pod.requests.memory .Values.agent.pod.requests.cpu }}
+    {{- end }}
+    {{- if .Values.agent.pod.requests }}
+        {{- if or .Values.agent.pod.requests.memory .Values.agent.pod.requests.cpu }}
       requests:
-{{- if .Values.agent.pod.requests.memory }}
+            {{- if .Values.agent.pod.requests.memory }}
         memory: {{ .Values.agent.pod.requests.memory }}
-{{- end }}
-{{- if .Values.agent.pod.requests.cpu }}
+            {{- end }}
+            {{- if .Values.agent.pod.requests.cpu }}
         cpu: {{ .Values.agent.pod.requests.cpu | quote }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- if .Values.agent.pod.limits }}
-{{- if or .Values.agent.pod.limits.memory .Values.agent.pod.limits.cpu }}
+            {{- end }}
+        {{- end }}
+    {{- end }}
+    {{- if .Values.agent.pod.limits }}
+        {{- if or .Values.agent.pod.limits.memory .Values.agent.pod.limits.cpu }}
       limits:
-{{- if .Values.agent.pod.limits.memory }}
+            {{- if .Values.agent.pod.limits.memory }}
         memory: {{ .Values.agent.pod.limits.memory }}
-{{- end }}
-{{- if .Values.agent.pod.limits.cpu }}
+            {{- end }}
+        {{- if .Values.agent.pod.limits.cpu }}
         cpu: {{ .Values.agent.pod.limits.cpu | quote }}
-{{- end }}
-{{- if .Values.agent.pod.nodeSelector }}
+        {{- end }}
+        {{- if .Values.agent.pod.nodeSelector }}
       nodeSelector:
       {{- toYaml $.Values.agent.pod.nodeSelector | nindent 8 }}
-{{- end }}
-{{- end }}
-{{- end }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.agent.pod.volumeMounts }}
+      volumeMounts:
+      {{- toYaml $.Values.agent.pod.volumeMounts | nindent 8 }}
+    {{- end }}
+    {{- if .Values.agent.pod.volumes }}
+      volumes:
+      {{- toYaml $.Values.agent.pod.volumes | nindent 8 }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- if .Values.agent.proxyHost }}

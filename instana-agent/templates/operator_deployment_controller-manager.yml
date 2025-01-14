@@ -38,7 +38,7 @@ spec:
             - --leader-elect
           command:
             - /manager
-          image: icr.io/instana/instana-agent-operator:2.1.13
+          image: icr.io/instana/instana-agent-operator:2.1.14
           imagePullPolicy: Always
           livenessProbe:
             httpGet:

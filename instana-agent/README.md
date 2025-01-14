@@ -149,6 +149,8 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.pod.requests.memory`                         | Container memory requests in MiB                                                                                                                                                                                                                                                                                       | `768Mi`                                                                                                                                 |
 | `agent.pod.tolerations`                             | Tolerations for pod assignment                                                                                                                                                                                                                                                                                         | `[]`                                                                                                                                    |
 | `agent.pod.affinity`                                | Affinity for pod assignment                                                                                                                                                                                                                                                                                            | `{}`                                                                                                                                    |
+| `agent.pod.volumes`                                | Custom volumes of the agent pod, see https://kubernetes.io/docs/concepts/storage/volumes/                                                                                                                                                                                                                                                                                            | `[]`                                                                                                                                    |
+| `agent.pod.volumeMounts`                           | Custom volume mounts of the agent pod, see https://kubernetes.io/docs/concepts/storage/volumes/                                                                                                                                                                                                                                                                                            | `[]`                                                                                                                                    |
 | `agent.serviceMesh.enabled`                         | Activate Instana Agent JVM monitoring service mesh support for Istio or OpenShift ServiceMesh                                                                                                                                                                                                                          | `true`                                                                                                                                  |
 | `agent.env`                                         | Additional environment variables for the agent                                                                                                                                                                                                                                                                         | `{}`                                                                                                                                    |
 | `agent.redactKubernetesSecrets`                     | Enable additional secrets redaction for selected Kubernetes resources                                                                                                                                                                                                                                                  | `nil` See [Kubernetes secrets](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#secrets) for more details.            |
@@ -365,7 +367,65 @@ zones:
       effect: "NoSchedule"
 ```
 
+### Volumes and volumeMounts
+
+You can define volumes and volumeMounts in the helm configuration to make files available to the agent pod, e.g. to provide client certificates or custom certificate authorities for a sensor to reach a monitored target.
+
+Example:
+
+An application requires the usage of a customer provided java key store (JKS) to interact with a monitored process, e.g. IBM MQ. The keystore file is created as secret in the cluster.
+
+To create the secret, the file can be uploaded with the Kubernetes `kubectl` or Openshift `oc` command line tools.
+
+```bash
+kubectl create secret generic keystore-secret-name --from-file=./application.jks -n instana-agent
+```
+
+Create a custom values file for the helm installation, e.g. `custom-values.yaml` and adjust the following content accordingly.
+
+```yaml
+agent:
+  pod:
+    volumeMounts:
+    - mountPath: /opt/instana/agent/etc/application.jks
+      name: jks-mount
+      subPath: application.jks
+    volumes:
+    - name: jks-mount
+      secret:
+        secretName: keystore-secret-name
+```
+
+To deploy the helm chart with the custom mount, specify the configuration as additional parameter.
+
+```bash
+helm install instana-agent \
+  --repo https://agents.instana.io/helm \
+  --namespace instana-agent \
+  --set agent.key='<your_agent_key>' \
+  --set agent.endpointHost='<your_host_agent_endpoint>' \
+  --set agent.endpointPort=443 \
+  --set cluster.name='<your_cluster_name>' \
+  --set zone.name='<your_zone_name>' \
+  -f custom-values.yaml \
+  instana-agent
+```
+
+See [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/) for other examples of volume options.
+
+
+The mounted file will be available inside the agent pods after the installation.
+
+```
+$ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
+/opt/instana/agent/etc/application.jks
+```
+
 ## Changelog
+
+### 2.0.8
+
+* Add option to define custom volumes and volumeMounts for the agent pod
 
 ### 2.0.7
 
