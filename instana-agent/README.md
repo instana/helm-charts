@@ -95,7 +95,7 @@ If you omit `zone.name`, the host zone will be automatically determined by the a
 To uninstall/delete the `instana-agent` release:
 
 ```bash
-helm uninstall instana-agent -n instana-agent && kubectl patch agent instana-agent -p '{"metadata":{"finalizers":null}}' --type=merge &&
+helm uninstall instana-agent -n instana-agent && kubectl patch agent instana-agent -n instana-agent -p '{"metadata":{"finalizers":null}}' --type=merge &&
 kubectl delete crd/agents.instana.io
 ```
 
@@ -422,6 +422,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 ```
 
 ## Changelog
+
+### 2.0.9
+
+* Fix rendering of the agent zones
 
 ### 2.0.8
 

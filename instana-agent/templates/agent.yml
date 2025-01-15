@@ -5,9 +5,12 @@ metadata:
   name: instana-agent
   namespace: instana-agent
 spec:
+{{- if .Values.zone }}
   zone:
     name: {{ .Values.zone.name }}
+{{- end }}
 {{- if .Values.zones }}
+  zones:
 {{- toYaml $.Values.zones | nindent 4 }}
 {{- end }}
   cluster:
@@ -34,6 +37,33 @@ spec:
     {{- else }}
     endpointPort: {{ .Values.agent.endpointPort | quote }}
     {{- end }}
+{{- if .Values.agent.instanaMvnRepoUrl }}
+    instanaMvnRepoUrl: {{ .Values.agent.instanaMvnRepoUrl }}
+{{- end }}
+{{- if .Values.agent.instanaMvnRepoFeaturesPath }}
+    instanaMvnRepoFeaturesPath: {{ .Values.agent.instanaMvnRepoFeaturesPath }}
+{{- end }}
+{{- if .Values.agent.instanaMvnRepoSharedPath }}
+    instanaMvnRepoSharedPath: {{ .Values.agent.instanaMvnRepoSharedPath }}
+{{- end }}
+{{- if .Values.agent.agentReleaseRepoMirrorUrl }}
+    agentReleaseRepoMirrorUrl: {{ .Values.agent.agentReleaseRepoMirrorUrl }}
+{{- end }}
+{{- if .Values.agent.agentReleaseRepoMirrorUsername }}
+    agentReleaseRepoMirrorUsername: {{ .Values.agent.agentReleaseRepoMirrorUsername }}
+{{- end }}
+{{- if .Values.agent.agentReleaseRepoMirrorPassword }}
+    agentReleaseRepoMirrorPassword: {{ .Values.agent.agentReleaseRepoMirrorPassword }}
+{{- end }}
+{{- if .Values.agent.instanaSharedRepoMirrorUrl }}
+    instanaSharedRepoMirrorUrl: {{ .Values.agent.instanaSharedRepoMirrorUrl }}
+{{- end }}
+{{- if .Values.agent.instanaSharedRepoMirrorUsername }}
+    instanaSharedRepoMirrorUsername: {{ .Values.agent.instanaSharedRepoMirrorUsername }}
+{{- end }}
+{{- if .Values.agent.instanaSharedRepoMirrorPassword }}
+    instanaSharedRepoMirrorPassword: {{ .Values.agent.instanaSharedRepoMirrorPassword }}
+{{- end }}
 {{- if .Values.agent.additionalBackends }}
     additionalBackends:
 {{- range $.Values.agent.additionalBackends }}
