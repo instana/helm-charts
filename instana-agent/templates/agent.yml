@@ -29,7 +29,7 @@ spec:
     keysSecret: {{ .Values.agent.keysSecret }}
 {{- end }}
 {{- if .Values.agent.listenAddress }}
-    listenAddress: {{ .Values.agent.listenAddress }}
+    listenAddress: {{ .Values.agent.listenAddress | quote }}
 {{- end }}
     endpointHost: {{ .Values.agent.endpointHost }}
     {{- if eq (typeOf .Values.agent.endpointPort) "string" }}

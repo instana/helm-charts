@@ -423,6 +423,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.11
+
+* Fix rendering of the agent.listenAddress parameter
+
 ### 2.0.10
 
 * Update operator to v2.1.16: Add ClusterRole/ClusterRoleBinding to instana-agent service account to enable prometheus sensor in Kubernetes
