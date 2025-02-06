@@ -423,6 +423,11 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.10
+
+* Update operator to v2.1.16: Add ClusterRole/ClusterRoleBinding to instana-agent service account to enable prometheus sensor in Kubernetes
+* Update operator to v2.1.15: Change deployment `controller-manager`, and RBAC `manager-role` and `manager-rolebinding` to instana-specifc names `instana-agent-controller-manager`, `instana-agent-clusterrole` and `instana-agent-clusterrolebinding`
+
 ### 2.0.9
 
 * Fix rendering of the agent zones

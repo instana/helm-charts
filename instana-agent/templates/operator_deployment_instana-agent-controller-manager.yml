@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: instana-agent-operator
-  name: controller-manager
+  name: instana-agent-controller-manager
   namespace: instana-agent
 spec:
   replicas: 2
@@ -38,7 +38,7 @@ spec:
             - --leader-elect
           command:
             - /manager
-          image: icr.io/instana/instana-agent-operator:2.1.14
+          image: icr.io/instana/instana-agent-operator:2.1.16
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
