@@ -423,6 +423,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.12
+
+* Update operator to v2.1.19: Deploy operator as a single instance to reduce resource consumption
+
 ### 2.0.11
 
 * Update operator to v2.1.18: Adjust logic when to render configuration-opentelemetry.yaml and increase default k8sensor pollrate to 10s

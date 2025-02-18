@@ -7,7 +7,7 @@ metadata:
   name: instana-agent-controller-manager
   namespace: instana-agent
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: instana-agent-operator
@@ -38,7 +38,7 @@ spec:
             - --leader-elect
           command:
             - /manager
-          image: icr.io/instana/instana-agent-operator:2.1.18
+          image: icr.io/instana/instana-agent-operator:2.1.19
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
