@@ -423,6 +423,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.13
+
+* Fix rendering of agent.proxyPort in agent custom resource
+
 ### 2.0.12
 
 * Update operator to v2.1.19: Deploy operator as a single instance to reduce resource consumption
