@@ -3,7 +3,6 @@ apiVersion: instana.io/v1
 kind: InstanaAgent
 metadata:
   name: instana-agent
-  namespace: instana-agent
 spec:
 {{- if .Values.zone }}
   zone:

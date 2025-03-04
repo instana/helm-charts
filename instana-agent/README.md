@@ -178,6 +178,12 @@ The following table lists the configurable parameters of the Instana chart and t
 | `zones`                                             | Multi-zone daemonset configuration.                                                                                                                                                                                                                                                                                    | `nil` see [below](#multiple-zones) for details                                                                                          |
 | `k8s_sensor.podDisruptionBudget.enabled`            | Whether to create DisruptionBudget for k8sensor to limit the number of concurrent disruptions                                                                                                                                                                                                                          | `false`                                                                                                                                 |
 | `k8s_sensor.deployment.pod.affinity`                | `k8sensor` deployment affinity format                                                                                                                                                                                                                                                                                  | `podAntiAffinity` defined in `values.yaml`                                                                                              |
+| `controllerManager.image.name`                                  | The image name to pull                                                                                                                                                                                                                                                                                                 | `instana/agent`                                                                                                                         |
+| `controllerManager.image.digest`                                | The image digest to pull; if specified, it causes `controllerManager.image.tag` to be ignored                                                                                                                                                                                                                                      | `nil`                                                                                                                                   |
+| `controllerManager.image.tag`                                   | The image tag to pull; this property is ignored if `controllerManager.image.digest` is specified                                                                                                                                                                                                                                   | `latest`                                                                                                                                |
+| `controllerManager.image.pullPolicy`                            | Image pull policy                                                                                                                                                                                                                                                                                                      | `Always`                                                                                                                                |
+| `controllerManager.image.pullSecrets`                           | Image pull secrets                                                                                | `nil`                                                                                                                                   |
+
 
 ### Agent Modes
 
@@ -422,6 +428,12 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 ```
 
 ## Changelog
+
+### 2.0.14
+
+* Update operator to v2.1.20: Fix http proxy handling for k8sensor if no credentials are required
+* Make controllerManager.image configurable
+* Support deploying to non-default namespaces
 
 ### 2.0.13
 

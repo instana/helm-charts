@@ -14,4 +14,3 @@ data:
 kind: ConfigMap
 metadata:
   name: manager-config
-  namespace: instana-agent
