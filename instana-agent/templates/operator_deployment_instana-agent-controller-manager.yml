@@ -9,9 +9,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- if not (lookup "apps/v1" "Deployment" .Release.Namespace "instana-agent-controller-manager") }}
-      {{- include "instana-agent.selectorLabels" . | nindent 6 }} # Add these labels only on initial install as they are immutable and might fail upgrades otherwise
+      {{- $existing := lookup "apps/v1" "Deployment" .Release.Namespace "instana-agent-controller-manager" }}
+      {{- if $existing }}
+      # Use existing selector labels from the deployment in the cluster
+      {{- $existing.spec.selector.matchLabels | toYaml | nindent 6 }}
       {{- else }}
+      # For new installations, use the default selector labels
       app.kubernetes.io/name: instana-agent-operator
       {{- end }}
   template:
@@ -27,10 +30,14 @@ spec:
         {{- end }}
       {{- end }}
       labels:
-        {{- if not (lookup "apps/v1" "Deployment" .Release.Namespace "instana-agent-controller-manager") }}
-        {{- include "instana-agent.labels" . | nindent 8 }} # Add these labels only on initial install as they are immutable and might fail upgrades otherwise
+        {{- $existing := lookup "apps/v1" "Deployment" .Release.Namespace "instana-agent-controller-manager" }}
+        {{- if $existing }}
+        # Use existing selector labels from the deployment in the cluster for the pod template
+        {{- $existing.spec.selector.matchLabels | toYaml | nindent 8 }}
+        # Additional labels can be added here that aren't part of the selector
         {{- else }}
-        app.kubernetes.io/name: instana-agent-operator
+        # For new installations, use the complete set of labels
+        {{- include "instana-agent.labels" . | nindent 8 }}
         {{- end }}
         {{- if .Values.agent }}
           {{- if .Values.agent.pod }}

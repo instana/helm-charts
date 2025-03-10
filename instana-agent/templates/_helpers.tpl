@@ -47,7 +47,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "instana-agent.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "instana-agent.name" . }}
+app.kubernetes.io/name: instana-agent-operator
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

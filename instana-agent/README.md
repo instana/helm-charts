@@ -429,6 +429,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.15
+
+* Fix label and matchLabel rendering on controller-manager deployment during upgrades
+
 ### 2.0.14
 
 * Update operator to v2.1.20: Fix http proxy handling for k8sensor if no credentials are required
