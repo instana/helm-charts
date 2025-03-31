@@ -429,6 +429,12 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.16
+
+* Remove outdated tech-preview files, as the k8sensor is general available now
+* Refactor CI pipeline to use IBM Cloud
+* Update operator to v.2.1.21: Add `nodes/proxy` to ClusterRoles to fetch kubelet information
+
 ### 2.0.15
 
 * Fix label and matchLabel rendering on controller-manager deployment during upgrades
