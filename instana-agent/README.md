@@ -429,6 +429,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.17
+
+* Avoid rending of `proxyPort:` in the agent CR, if agent.proxyPort is not defined in values
+
 ### 2.0.16
 
 * Remove outdated tech-preview files, as the k8sensor is general available now

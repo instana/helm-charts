@@ -188,10 +188,12 @@ spec:
 {{- if .Values.agent.proxyHost }}
     proxyHost: {{ .Values.agent.proxyHost }}
 {{- end }}
-{{- if eq (typeOf .Values.agent.proxyPort) "string" }}
+{{- if .Values.agent.proxyPort }}
+    {{- if eq (typeOf .Values.agent.proxyPort) "string" }}
     proxyPort: {{ .Values.agent.proxyPort }}
-{{- else }}
+    {{- else }}
     proxyPort: {{ .Values.agent.proxyPort | quote }}
+    {{- end }}
 {{- end }}
 {{- if .Values.agent.proxyProtocol }}
     proxyProtocol: {{ .Values.agent.proxyProtocol }}
