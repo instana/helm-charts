@@ -429,6 +429,14 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.19
+
+* Bump operator to v2.1.23: Fix problem in the k8sensor deployment when existing additional backends were changed
+
+### 2.0.18
+
+* Bump operator to v2.1.22
+
 ### 2.0.17
 
 * Avoid rending of `proxyPort:` in the agent CR, if agent.proxyPort is not defined in values
