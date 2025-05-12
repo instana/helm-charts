@@ -429,6 +429,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.20
+
+* Bump operator to v2.1.24: Update depencencies in the operator and golang to v1.24.3
+
 ### 2.0.19
 
 * Bump operator to v2.1.23: Fix problem in the k8sensor deployment when existing additional backends were changed
