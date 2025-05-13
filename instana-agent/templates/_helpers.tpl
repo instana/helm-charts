@@ -35,7 +35,6 @@ Common labels
 */}}
 {{- define "instana-agent.labels" -}}
 helm.sh/chart: {{ include "instana-agent.chart" . }}
-app.kubernetes.io/name: instana-agent-operator
 {{ include "instana-agent.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
