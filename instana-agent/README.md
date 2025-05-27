@@ -429,6 +429,11 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.21
+
+* Remove duplicated label `app.kubernetes.io/name: instana-agent-operator` on the instana-agent-controller-manager deployment
+* Bump operator to v2.1.25: Add prerequisites to allow selective monitoring on namespace level in the operator
+
 ### 2.0.20
 
 * Bump operator to v2.1.24: Update depencencies in the operator and golang to v1.24.3
