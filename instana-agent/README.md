@@ -429,6 +429,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 
 ## Changelog
 
+### 2.0.22
+
+* Bump operator to v2.1.26: Adjust RBAC permissions of instana-agent-controller-manager to control PodDisruptionBudgets of the k8sensor deployment
+
 ### 2.0.21
 
 * Remove duplicated label `app.kubernetes.io/name: instana-agent-operator` on the instana-agent-controller-manager deployment
