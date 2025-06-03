@@ -14,6 +14,7 @@ Additional information may be available in the [Instana documentation](https://w
 
 This is the repository you would open PRs to if you have great ideas to improve the Instana helm charts.
 Please be aware that your contributions can be accepted only if you agree with them being licensed under Apache 2.0.
+Your changes can also not be directly applied on this repository in most cases, as only build results are published here. The build instructions and pipeline definitions are stored in IBM GitHub Enterprise.
 
 ## Support
 
