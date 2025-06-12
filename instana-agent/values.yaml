@@ -289,3 +289,10 @@ controllerManager:
     #   - name: my_awesome_secret_instead
     # If you want no imagePullSecrets to be specified in the agent pod, you can just pass an empty array to agent.image.pullSecrets
     pullSecrets: []
+  # resources:
+  #   limits:
+  #     cpu: 200m
+  #     memory: 600Mi
+  #   requests:
+  #     cpu: 200m
+  #     memory: 200Mi

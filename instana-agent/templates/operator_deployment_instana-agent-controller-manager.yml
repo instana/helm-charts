@@ -105,12 +105,15 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
+          {{- if and (hasKey .Values "controllerManager") (hasKey .Values.controllerManager "resources") }}
+            {{- toYaml .Values.controllerManager.resources | nindent 12 }}
+          {{- else }}
             limits:
-              cpu: 200m
               memory: 600Mi
             requests:
               cpu: 200m
               memory: 200Mi
+          {{- end }}
           securityContext:
             allowPrivilegeEscalation: true
       serviceAccountName: instana-agent-operator

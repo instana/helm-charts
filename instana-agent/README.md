@@ -183,6 +183,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `controllerManager.image.tag`                                   | The image tag to pull; this property is ignored if `controllerManager.image.digest` is specified                                                                                                                                                                                                                                   | `latest`                                                                                                                                |
 | `controllerManager.image.pullPolicy`                            | Image pull policy                                                                                                                                                                                                                                                                                                      | `Always`                                                                                                                                |
 | `controllerManager.image.pullSecrets`                           | Image pull secrets                                                                                | `nil`                                                                                                                                   |
+| `controllerManager.resources`                           | limits.cpu, limits.memory, requests.cpu and requests.memory can be defined                                                                              | `nil`                                                                                                                                   |
 
 
 ### Agent Modes
@@ -428,6 +429,10 @@ $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 ```
 
 ## Changelog
+
+### 2.0.24
+
+* Add config options for controllerManager deployment resources
 
 ### 2.0.23
 
