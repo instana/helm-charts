@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.26
+
+* Add option to define Kubernetes env vars in the agent.pod.env property of the agent CR. This notation replaces the previous string map notation in agent.env, but both notations keep working. This feature allows to map Kubernetes secrets or other properties to env vars exposed to the agent pod and can be used by sensors.
+
 ### 2.0.25
 
 * Add migration script to convert agent configuration from configmap to custom-values.yaml prior an helm upgrade from v1 to v2
