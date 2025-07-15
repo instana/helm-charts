@@ -242,10 +242,24 @@ spec:
 {{- if and (hasKey .Values.opentelemetry "grpc") (hasKey .Values.opentelemetry.grpc "enabled") }}
     grpc:
       enabled: {{ .Values.opentelemetry.grpc.enabled }}
+{{- if hasKey .Values.opentelemetry.grpc "port" }}
+      {{- if eq (typeOf .Values.opentelemetry.grpc.port) "string" }}
+      port: {{ .Values.opentelemetry.grpc.port }}
+      {{- else }}
+      port: {{ .Values.opentelemetry.grpc.port | quote }}
+      {{- end }}
+{{- end }}
 {{- end }}
 {{- if and (hasKey .Values.opentelemetry "http") (hasKey .Values.opentelemetry.http "enabled") }}
     http:
       enabled: {{ .Values.opentelemetry.http.enabled }}
+{{- if hasKey .Values.opentelemetry.http "port" }}
+      {{- if eq (typeOf .Values.opentelemetry.http.port) "string" }}
+      port: {{ .Values.opentelemetry.http.port }}
+      {{- else }}
+      port: {{ .Values.opentelemetry.http.port | quote }}
+      {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

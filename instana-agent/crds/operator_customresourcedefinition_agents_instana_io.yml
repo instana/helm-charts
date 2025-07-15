@@ -5207,14 +5207,26 @@ spec:
                     enabled:
                       type: boolean
                     grpc:
+                      description: Specify whether GRPC is enabled (default is true).
                       properties:
                         enabled:
+                          description: Explicitly enable
                           type: boolean
+                        port:
+                          description: Specify the port
+                          format: int32
+                          type: integer
                       type: object
                     http:
+                      description: Specify whether HTTP is enabled (default is true).
                       properties:
                         enabled:
+                          description: Explicitly enable
                           type: boolean
+                        port:
+                          description: Specify the port
+                          format: int32
+                          type: integer
                       type: object
                   type: object
                 pinnedChartVersion:

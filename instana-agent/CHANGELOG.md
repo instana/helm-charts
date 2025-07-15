@@ -1,8 +1,13 @@
 ## Changelog
 
+### 2.0.27
+
+* Bump operator to v2.1.29: Add option to change OpenTelemetry ports
+
 ### 2.0.26
 
 * Add option to define Kubernetes env vars in the agent.pod.env property of the agent CR. This notation replaces the previous string map notation in agent.env, but both notations keep working. This feature allows to map Kubernetes secrets or other properties to env vars exposed to the agent pod and can be used by sensors.
+* Bump operator to v2.1.28: Allow Kubernetes env vars on agent.pod.env
 
 ### 2.0.25
 
