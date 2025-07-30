@@ -1,5 +1,13 @@
 ## Changelog
 
+### 2.0.28
+
+* Bump operator to v2.1.30: Add support for remote agents via the AgentRemote custom resource
+* Bump operator to v2.1.31: Add support for k8sensor control plane monitoring
+* Bump operator to v2.1.32: Fix liveness probe to prevent remote agent restart loop
+
+* Add documentation for the new remote agent feature
+
 ### 2.0.27
 
 * Bump operator to v2.1.29: Add option to change OpenTelemetry ports

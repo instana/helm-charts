@@ -33,6 +33,7 @@ echo "helm pull --repo https://agents.instana.io/helm --untar instana-agent"
 echo "kubectl apply -f instana-agent/crds"
 echo "# On OpenShift, you need to add the privileged SCC to the instana-agent service account:"
 echo "oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent"
+echo "oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent"
 echo "helm upgrade --namespace instana-agent instana-agent \
 --repo https://agents.instana.io/helm instana-agent \
 --reuse-values -f custom-values.yaml"

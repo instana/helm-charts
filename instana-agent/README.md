@@ -24,6 +24,7 @@ $ kubectl create namespace instana-agent
 
 ```bash
 $ oc adm policy add-scc-to-user privileged -z instana-agent
+$ oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent
 ```
 
 To install the chart with the release name `instana-agent` and set the values on the command line run:
@@ -534,6 +535,14 @@ The mounted file will be available inside the agent pods after the installation.
 $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 /opt/instana/agent/etc/application.jks
 ```
+
+## Remote Agent Support
+
+The Instana Agent Operator now supports remote agents through a dedicated Custom Resource Definition (CRD) called `AgentRemote`. This feature allows you to monitor systems that are not directly part of your Kubernetes cluster.
+
+Unlike the regular Agent custom resource, which is managed by the Helm chart, the Remote Agent custom resource must be created manually. The Remote Agent feature is completely optional.
+
+An example of the Remote Agent CR can be found here: https://github.com/instana/instana-agent-operator/blob/main/config/samples/instana_v1_instanaagentremote.yaml
 
 ## References
 
