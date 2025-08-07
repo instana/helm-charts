@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.29
+
+* Bump operator to v2.1.33: Dependency updates and OLM implementation improvements for AgentRemote permission handling
+
 ### 2.0.28
 
 * Bump operator to v2.1.30: Add support for remote agents via the AgentRemote custom resource
