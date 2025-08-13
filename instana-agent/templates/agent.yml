@@ -123,7 +123,7 @@ spec:
 {{- if .Values.agent.updateStrategy.rollingUpdate }}
 {{- if .Values.agent.updateStrategy.rollingUpdate.maxUnavailable }}
       rollingUpdate:
-        maxUnavailable: {{ .Values.agent.updateStrategy.maxUnavailable }}
+        maxUnavailable: {{ .Values.agent.updateStrategy.rollingUpdate.maxUnavailable }}
 {{- end }}
 {{- end }}
 {{- end }}
