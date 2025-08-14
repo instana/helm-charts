@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.30
+
+* Fix wrong variable reference in the `agent.yml` template-file. (`.Values.agent.updateStrategy.rollingUpdate.maxUnavailable`)
+
 ### 2.0.29
 
 * Bump operator to v2.1.33: Dependency updates and OLM implementation improvements for AgentRemote permission handling
