@@ -2,7 +2,7 @@
 
 ### 2.0.30
 
-* Fix wrong variable reference in the `agent.yml` template-file. (`.Values.agent.updateStrategy.rollingUpdate.maxUnavailable`)
+* Fix incorrect path reference for agent.updateStrategy.rollingUpdate.maxUnavailable in agent.yml template
 
 ### 2.0.29
 
