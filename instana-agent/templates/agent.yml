@@ -101,7 +101,7 @@ spec:
       digest: {{ .Values.agent.image.digest }}
 {{- end }}
 {{- if .Values.agent.image.tag }}
-      tag: {{ .Values.agent.image.tag }}
+      tag: {{ .Values.agent.image.tag | quote }}
 {{- end }}
 {{- if .Values.agent.image.pullPolicy }}
       pullPolicy: {{ .Values.agent.image.pullPolicy }}
@@ -310,7 +310,7 @@ spec:
       digest: {{ .Values.k8s_sensor.image.digest }}
 {{- end }}
 {{- if .Values.k8s_sensor.image.tag }}
-      tag: {{ .Values.k8s_sensor.image.tag }}
+      tag: {{ .Values.k8s_sensor.image.tag | quote }}
 {{- end }}
 {{- if .Values.k8s_sensor.image.pullPolicy }}
       pullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
