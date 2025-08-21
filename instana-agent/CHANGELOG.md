@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.31
+
+* Fix incorrect handling of dates as image tags in helm values 
+
 ### 2.0.30
 
 * Fix incorrect path reference for agent.updateStrategy.rollingUpdate.maxUnavailable in agent.yml template
