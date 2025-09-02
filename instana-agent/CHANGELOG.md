@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.32
+
+* Bump operator to v2.1.34: Dependency updates
+
 ### 2.0.31
 
 * Fix incorrect handling of dates as image tags in helm values 

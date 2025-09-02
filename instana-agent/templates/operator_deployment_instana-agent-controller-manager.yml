@@ -86,10 +86,10 @@ spec:
           image: {{ include "image" $.Values.controllerManager.image | quote }}
           imagePullPolicy: {{ $.Values.controllerManager.image.pullPolicy | default "Always" }}
             {{- else }}
-          image: icr.io/instana/instana-agent-operator:2.1.33
+          image: icr.io/instana/instana-agent-operator:2.1.34
             {{- end }}
           {{- else }}
-          image: icr.io/instana/instana-agent-operator:2.1.33
+          image: icr.io/instana/instana-agent-operator:2.1.34
           {{- end }}
           livenessProbe:
             httpGet:
