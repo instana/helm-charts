@@ -10,25 +10,25 @@ description: Instana Agent for Kubernetes
 home: https://www.instana.com/
 icon: https://agents.instana.io/helm/stan-logo-2020.png
 maintainers:
-- email: felix.marx@ibm.com
-  name: FelixMarxIBM
-- email: fredrik.gundersen@ibm.com
-  name: FredrikAtIBM
-- email: jefiyamj@ibm.com
-  name: Jefiya-MJ
-- email: konrad.ohms@de.ibm.com
-  name: Konrad-Ohms
-- email: Krishnapriya.RS@ibm.com
-  name: Krishnapriya-RS
-- email: milica.cvrkota@ibm.com
-  name: Milica-Cvrkota-IBM
-- email: Nagaraj.Kandoor@ibm.com
-  name: nagaraj-kandoor
-- email: Rashmi.Swamy@ibm.com
-  name: rashmiswamyibm
-- email: Vineeth.Soman@ibm.com
-  name: vineethsoman03
+  - email: felix.marx@ibm.com
+    name: FelixMarxIBM
+  - email: fredrik.gundersen@ibm.com
+    name: FredrikAtIBM
+  - email: jefiyamj@ibm.com
+    name: Jefiya-MJ
+  - email: konrad.ohms@de.ibm.com
+    name: Konrad-Ohms
+  - email: Krishnapriya.RS@ibm.com
+    name: Krishnapriya-RS
+  - email: milica.cvrkota@ibm.com
+    name: Milica-Cvrkota-IBM
+  - email: Nagaraj.Kandoor@ibm.com
+    name: nagaraj-kandoor
+  - email: Rashmi.Swamy@ibm.com
+    name: rashmiswamyibm
+  - email: Vineeth.Soman@ibm.com
+    name: vineethsoman03
 name: instana-agent
 sources:
-- https://github.com/instana/helm-charts
-version: 2.0.32
+  - https://github.com/instana/helm-charts
+version: 2.0.33
