@@ -4,6 +4,9 @@ kind: InstanaAgent
 metadata:
   name: instana-agent
 spec:
+{{- if hasKey .Values "useSecretMounts" }}
+  useSecretMounts: {{ .Values.useSecretMounts }}
+{{- end }}
 {{- if .Values.zone }}
   zone:
     name: {{ .Values.zone.name }}

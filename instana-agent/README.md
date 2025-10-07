@@ -188,6 +188,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `serviceAccount.create`                             | Whether a ServiceAccount should be created                                                                                                                                                                                                                                                                             | `true`                                                                                                                                  |
 | `serviceAccount.name`                               | Name of the ServiceAccount to use                                                                                                                                                                                                                                                                                      | `instana-agent`                                                                                                                         |
 | `serviceAccount.annotations`                        | Annotations to add to the service account                                                                                                                                                                                                                                                                              | `{}`                                                                                                                                    |
+| `useSecretMounts`                                   | Controls whether sensitive information is mounted as files instead of environment variables. Improves security by preventing credentials from being visible in process listings.                                                                                                                                         | `true`                                                                                                                                  |
 | `zone.name`                                         | Zone that detected technologies will be assigned to                                                                                                                                                                                                                                                                    | `nil` You must provide either `zone.name` or `cluster.name`, see [above](#installation) for details                                     |
 | `zones`                                             | Multi-zone daemonset configuration.                                                                                                                                                                                                                                                                                    | `nil` see [below](#multiple-zones) for details                                                                                          |
 | `k8s_sensor.podDisruptionBudget.enabled`            | Whether to create DisruptionBudget for k8sensor to limit the number of concurrent disruptions                                                                                                                                                                                                                          | `false`                                                                                                                                 |
@@ -535,6 +536,65 @@ The mounted file will be available inside the agent pods after the installation.
 $ kubectl exec instana-agent-xxxxx -- ls /opt/instana/agent/etc/application.jks
 /opt/instana/agent/etc/application.jks
 ```
+
+### Secret Mounts Feature
+
+The Secret Mounts feature improves security by mounting sensitive information as files instead of exposing them as environment variables in Kubernetes pods. This is a security best practice that prevents credentials from being visible during command line debugging or in process listings.
+
+When enabled (default), the Instana Agent Operator:
+
+1. Creates a secrets directory at `/opt/instana/agent/etc/instana/secrets/`
+2. Mounts sensitive information as files in this directory
+3. Skips setting sensitive environment variables
+4. Configures the agent to read secrets from files when available
+
+The feature is controlled by the `useSecretMounts` flag at the top level of the spec:
+
+```yaml
+apiVersion: instana.io/v1
+kind: InstanaAgent
+metadata:
+  name: instana-agent
+  namespace: instana-agent
+spec:
+  useSecretMounts: true  # Set to false to disable secret mounts
+  agent:
+    key: <your-agent-key>
+    endpointHost: <your-endpoint-host>
+    endpointPort: <your-endpoint-port>
+```
+
+The same configuration applies to `InstanaAgentRemote`.
+
+The feature is **enabled by default** (useSecretMounts: true), no action is required to use this feature in new deployments
+
+If you need to revert to the previous behavior (using environment variables for secrets), set the property to false:
+
+```yaml
+spec:
+  useSecretMounts: false
+```
+
+When the feature is enabled, the following secrets are mounted as files:
+
+Secret | File Path |
+|--------|-----------|
+Agent Key | `/opt/instana/agent/etc/instana/secrets/INSTANA_AGENT_KEY` |
+Download Key | `/opt/instana/agent/etc/instana/secrets/INSTANA_DOWNLOAD_KEY` |
+Proxy User | `/opt/instana/agent/etc/instana/secrets/INSTANA_AGENT_PROXY_USER` |
+Proxy Password | `/opt/instana/agent/etc/instana/secrets/INSTANA_AGENT_PROXY_PASSWORD` |
+HTTPS Proxy | `/opt/instana/agent/etc/instana/secrets/HTTPS_PROXY` |
+Release Repo Mirror Username | `/opt/instana/agent/etc/instana/secrets/AGENT_RELEASE_REPOSITORY_MIRROR_USERNAME` |
+Release Repo Mirror Password | `/opt/instana/agent/etc/instana/secrets/AGENT_RELEASE_REPOSITORY_MIRROR_PASSWORD` |
+Shared Repo Mirror Username | `/opt/instana/agent/etc/instana/secrets/INSTANA_SHARED_REPOSITORY_MIRROR_USERNAME` |
+Shared Repo Mirror Password | `/opt/instana/agent/etc/instana/secrets/INSTANA_SHARED_REPOSITORY_MIRROR_PASSWORD` |
+
+Security Benefits:
+
+- Prevents secrets from being exposed in environment variables
+- Reduces risk of credential exposure during debugging
+- Follows Kubernetes security best practices for handling sensitive information
+- Improves compliance with security standards that require protection of credentials
 
 ## Remote Agent Support
 

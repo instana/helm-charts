@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.0.33
+
+* Bump operator to v2.1.36: Implement secret mounts for sensitive information
+* Bump operator to v2.1.35: Dependency updates
+
 ### 2.0.32
 
 * Bump operator to v2.1.34: Dependency updates
