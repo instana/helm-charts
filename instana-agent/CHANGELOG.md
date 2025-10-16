@@ -2,6 +2,10 @@
 
 ### 2.0.33
 
+* Bump operator to v2.2.0: Dependency updates for helm, go v1.25.3 and other go dependencies, remove /var/lib mount in agent pods
+
+### 2.0.33
+
 * Bump operator to v2.1.36: Implement secret mounts for sensitive information
 * Bump operator to v2.1.35: Dependency updates
 
