@@ -302,7 +302,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.k8s_sensor }}
-{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget }}
+{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget .Values.k8s_sensor.etcd .Values.k8s_sensor.restClient }}
   k8s_sensor:
 {{- if .Values.k8s_sensor.image }}
     image:
@@ -326,6 +326,53 @@ spec:
 {{- if .Values.k8s_sensor.podDisruptionBudget }}
     podDisruptionBudget:
     {{- toYaml $.Values.k8s_sensor.podDisruptionBudget | nindent 6 }}
+{{- end }}
+
+{{- if .Values.k8s_sensor.etcd }}
+    etcd:
+    {{- if hasKey .Values.k8s_sensor.etcd "insecure" }}
+      insecure: {{ .Values.k8s_sensor.etcd.insecure }}
+    {{- end }}
+    {{- if .Values.k8s_sensor.etcd.ca }}
+      ca:
+      {{- if .Values.k8s_sensor.etcd.ca.mountPath }}
+        mountPath: {{ .Values.k8s_sensor.etcd.ca.mountPath }}
+      {{- end }}
+      {{- if .Values.k8s_sensor.etcd.ca.secretName }}
+        secretName: {{ .Values.k8s_sensor.etcd.ca.secretName }}
+      {{- end }}
+      {{- if .Values.k8s_sensor.etcd.ca.filename }}
+        filename: {{ .Values.k8s_sensor.etcd.ca.filename }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.k8s_sensor.etcd.targets }}
+      targets:
+      {{- range .Values.k8s_sensor.etcd.targets }}
+        - {{ . }}
+      {{- end }}
+    {{- end }}
+{{- end }}
+
+{{- if .Values.k8s_sensor.restClient }}
+    restClient:
+    {{- if .Values.k8s_sensor.restClient.hostAllowlist }}
+      hostAllowlist:
+      {{- range .Values.k8s_sensor.restClient.hostAllowlist }}
+        - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.k8s_sensor.restClient.ca }}
+      ca:
+      {{- if .Values.k8s_sensor.restClient.ca.mountPath }}
+        mountPath: {{ .Values.k8s_sensor.restClient.ca.mountPath }}
+      {{- end }}
+      {{- if .Values.k8s_sensor.restClient.ca.secretName }}
+        secretName: {{ .Values.k8s_sensor.restClient.ca.secretName }}
+      {{- end }}
+      {{- if .Values.k8s_sensor.restClient.ca.filename }}
+        filename: {{ .Values.k8s_sensor.restClient.ca.filename }}
+      {{- end }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

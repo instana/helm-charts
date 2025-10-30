@@ -7,10 +7,10 @@ rules:
   - nonResourceURLs:
       - /healthz
       - /metrics
+      - /metrics/*
       - /metrics/cadvisor
       - /stats/summary
       - /version
-      - /metrics/*
     verbs:
       - get
   - apiGroups:
@@ -186,6 +186,8 @@ rules:
     resources:
       - clusterrolebindings
       - clusterroles
+      - rolebindings
+      - roles
     verbs:
       - bind
       - create
@@ -195,6 +197,14 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+      - security.openshift.io
+    resourceNames:
+      - anyuid
+    resources:
+      - securitycontextconstraints
+    verbs:
+      - use
   - apiGroups:
       - security.openshift.io
     resourceNames:

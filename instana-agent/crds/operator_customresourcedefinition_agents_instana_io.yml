@@ -16,6 +16,8 @@ spec:
     plural: agents
     shortNames:
       - ia
+      - instanaagent
+      - instanaagents
     singular: agent
   scope: Namespaced
   versions:
@@ -4288,6 +4290,31 @@ spec:
                           description: Specify the number of replicas for the Kubernetes Sensor.
                           type: integer
                       type: object
+                    etcd:
+                      description: ETCD configuration for secure scraping
+                      properties:
+                        ca:
+                          description: CA configuration for ETCD
+                          properties:
+                            filename:
+                              description: Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+                              type: string
+                            mountPath:
+                              description: Path where the CA should be mounted
+                              type: string
+                            secretName:
+                              description: Kubernetes Secret name containing the CA certificate
+                              type: string
+                          type: object
+                        insecure:
+                          description: 'Whether to use insecure connection to ETCD (default: false)'
+                          type: boolean
+                        targets:
+                          description: Optional ETCD targets for vanilla clusters
+                          items:
+                            type: string
+                          type: array
+                      type: object
                     image:
                       properties:
                         digest:
@@ -4310,6 +4337,28 @@ spec:
                       properties:
                         enabled:
                           type: boolean
+                      type: object
+                    restClient:
+                      description: REST client configuration
+                      properties:
+                        ca:
+                          description: CA configuration for control plane
+                          properties:
+                            filename:
+                              description: Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+                              type: string
+                            mountPath:
+                              description: Path where the CA should be mounted
+                              type: string
+                            secretName:
+                              description: Kubernetes Secret name containing the CA certificate
+                              type: string
+                          type: object
+                        hostAllowlist:
+                          description: List of hosts allowed for REST client connections
+                          items:
+                            type: string
+                          type: array
                       type: object
                   type: object
                 kubernetes:

@@ -176,6 +176,15 @@ The following table lists the configurable parameters of the Instana chart and t
 | `k8s_sensor.deployment.pod.limits.memory`           | Memory request limits for the `k8sensor` pods                                                                                                                                                                                                                                                                          | `6144Mi`                                                                                                                                |
 | `k8s_sensor.deployment.pod.requests.cpu`            | CPU limit for the `k8sensor` pods                                                                                                                                                                                                                                                                                      | `1.5`                                                                                                                                   |
 | `k8s_sensor.deployment.pod.requests.memory`         | Memory limit for the `k8sensor` pods                                                                                                                                                                                                                                                                                   | `1024Mi`                                                                                                                                |
+| `k8s_sensor.etcd.insecure`                          | Whether to use insecure connection to ETCD                                                                                                                                                                                                                                                                             | `false`                                                                                                                                 |
+| `k8s_sensor.etcd.ca.mountPath`                      | Path where the CA should be mounted for ETCD                                                                                                                                                                                                                                                                           | `nil`                                                                                                                                   |
+| `k8s_sensor.etcd.ca.secretName`                     | Kubernetes Secret name containing the CA certificate for ETCD                                                                                                                                                                                                                                                          | `nil`                                                                                                                                   |
+| `k8s_sensor.etcd.ca.filename`                       | Name of the file containing the CA Certificate for ETCD (key in the Kubernetes Secret)                                                                                                                                                                                                                                 | `nil`                                                                                                                                   |
+| `k8s_sensor.etcd.targets`                           | Optional ETCD targets for vanilla clusters                                                                                                                                                                                                                                                                             | `nil`                                                                                                                                   |
+| `k8s_sensor.restClient.hostAllowlist`               | List of hosts allowed for REST client connections                                                                                                                                                                                                                                                                      | `nil`                                                                                                                                   |
+| `k8s_sensor.restClient.ca.mountPath`                | Path where the CA should be mounted for REST client                                                                                                                                                                                                                                                                    | `nil`                                                                                                                                   |
+| `k8s_sensor.restClient.ca.secretName`               | Kubernetes Secret name containing the CA certificate for REST client                                                                                                                                                                                                                                                   | `nil`                                                                                                                                   |
+| `k8s_sensor.restClient.ca.filename`                 | Name of the file containing the CA Certificate for REST client (key in the Kubernetes Secret)                                                                                                                                                                                                                          | `nil`                                                                                                                                   |
 | `podSecurityPolicy.enable`                          | Whether a PodSecurityPolicy should be authorized for the Instana Agent pods. Requires `rbac.create` to be `true` as well and it is available until Kubernetes version v1.25.                                                                                                                                           | `false` See [PodSecurityPolicy](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#podsecuritypolicy) for more details. |
 | `podSecurityPolicy.name`                            | Name of an _existing_ PodSecurityPolicy to authorize for the Instana Agent pods. If not provided and `podSecurityPolicy.enable` is `true`, a PodSecurityPolicy will be created for you.                                                                                                                                | `nil`                                                                                                                                   |
 | `rbac.create`                                       | Whether RBAC resources should be created                                                                                                                                                                                                                                                                               | `true`                                                                                                                                  |
@@ -603,6 +612,192 @@ The Instana Agent Operator now supports remote agents through a dedicated Custom
 Unlike the regular Agent custom resource, which is managed by the Helm chart, the Remote Agent custom resource must be created manually. The Remote Agent feature is completely optional.
 
 An example of the Remote Agent CR can be found here: https://github.com/instana/instana-agent-operator/blob/main/config/samples/instana_v1_instanaagentremote.yaml
+
+## ETCD and RestClient Configuration
+
+The Instana Agent Helm chart supports configuring secure connections to ETCD and controlling REST client access. These configurations are particularly useful for securing the monitoring of Kubernetes clusters.
+
+### ETCD Configuration
+
+ETCD configuration allows you to set up secure scraping of ETCD metrics:
+
+```yaml
+# Using Helm values
+k8s_sensor:
+  etcd:
+    # Whether to use insecure connection to ETCD (default: false)
+    insecure: false
+    
+    # CA configuration for ETCD
+    ca:
+      # Path where the CA should be mounted
+      mountPath: "/etc/instana/etcd-ca"
+      # Kubernetes Secret name containing the CA certificate
+      secretName: "etcd-ca-cert"
+      # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+      filename: "ca.crt"
+    
+    # Optional ETCD targets for vanilla clusters
+    targets:
+      - "https://etcd-0.example.com:2379"
+      - "https://etcd-1.example.com:2379"
+```
+
+You can apply these settings using Helm:
+
+```bash
+helm install instana-agent \
+  --namespace instana-agent \
+  --repo https://agents.instana.io/helm \
+  --set agent.key=INSTANA_AGENT_KEY \
+  --set agent.endpointHost=HOST \
+  --set zone.name=ZONE_NAME \
+  --set cluster.name="CLUSTER_NAME" \
+  --set k8s_sensor.etcd.insecure=false \
+  --set k8s_sensor.etcd.ca.mountPath="/etc/instana/etcd-ca" \
+  --set k8s_sensor.etcd.ca.secretName="etcd-ca-cert" \
+  --set k8s_sensor.etcd.ca.filename="ca.crt" \
+  --set k8s_sensor.etcd.targets[0]="https://etcd-0.example.com:2379" \
+  --set k8s_sensor.etcd.targets[1]="https://etcd-1.example.com:2379" \
+  instana-agent
+```
+
+### REST Client Configuration
+
+REST client configuration allows you to control which hosts the k8s_sensor can connect to and configure secure connections:
+
+```yaml
+# Using Helm values
+k8s_sensor:
+  restClient:
+    # List of hosts allowed for REST client connections
+    hostAllowlist:
+      - "api.example.com"
+      - "monitoring.example.com"
+    
+    # CA configuration for control plane
+    ca:
+      # Path where the CA should be mounted
+      mountPath: "/etc/instana/rest-ca"
+      # Kubernetes Secret name containing the CA certificate
+      secretName: "rest-ca-cert"
+      # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+      filename: "ca.crt"
+```
+
+You can apply these settings using Helm:
+
+```bash
+helm install instana-agent \
+  --namespace instana-agent \
+  --repo https://agents.instana.io/helm \
+  --set agent.key=INSTANA_AGENT_KEY \
+  --set agent.endpointHost=HOST \
+  --set zone.name=ZONE_NAME \
+  --set cluster.name="CLUSTER_NAME" \
+  --set k8s_sensor.restClient.hostAllowlist[0]="api.example.com" \
+  --set k8s_sensor.restClient.hostAllowlist[1]="monitoring.example.com" \
+  --set k8s_sensor.restClient.ca.mountPath="/etc/instana/rest-ca" \
+  --set k8s_sensor.restClient.ca.secretName="rest-ca-cert" \
+  --set k8s_sensor.restClient.ca.filename="ca.crt" \
+  instana-agent
+```
+
+### Combined Configuration Example for ETCD and RestClient
+
+This values.yaml file can be used to configure etcd and restClient for the k8sensor in a single configuration.
+Especially, if settings become more complex, the values.yaml is the preferred options.
+
+```yaml
+cluster:
+  name: my-cluster
+agent:
+  key: your-agent-key
+  endpointHost: ingress-red-saas.instana.io
+  endpointPort: 443
+k8s_sensor:
+  # ETCD configuration for secure scraping
+  etcd:
+    # Whether to use insecure connection to ETCD
+    insecure: false
+    # CA configuration for ETCD
+    ca:
+      # Path where the CA should be mounted
+      mountPath: "/etc/instana/etcd-ca"
+      # Kubernetes Secret name containing the CA certificate
+      secretName: "etcd-ca-cert"
+      # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+      filename: "ca.crt"
+    # Optional ETCD targets for vanilla clusters
+    targets:
+      - "https://etcd-0.example.com:2379"
+      - "https://etcd-1.example.com:2379"
+  
+  # REST client configuration
+  restClient:
+    # List of hosts allowed for REST client connections
+    hostAllowlist:
+      - "api.example.com"
+      - "monitoring.example.com"
+    # CA configuration for control plane
+    ca:
+      # Path where the CA should be mounted
+      mountPath: "/etc/instana/rest-ca"
+      # Kubernetes Secret name containing the CA certificate
+      secretName: "rest-ca-cert"
+      # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+      filename: "ca.crt"
+```
+
+This will create this agent CR used by the instana-agent-operator:
+
+You can combine both ETCD and RestClient configurations:
+
+```yaml
+apiVersion: instana.io/v1
+kind: InstanaAgent
+metadata:
+  name: instana-agent
+spec:
+  cluster:
+    name: my-cluster
+  agent:
+    key: your-agent-key
+    endpointHost: ingress-red-saas.instana.io
+    endpointPort: "443"
+  k8s_sensor:
+    # ETCD configuration for secure scraping
+    etcd:
+      # Whether to use insecure connection to ETCD
+      insecure: false
+      # CA configuration for ETCD
+      ca:
+        # Path where the CA should be mounted
+        mountPath: "/etc/instana/etcd-ca"
+        # Kubernetes Secret name containing the CA certificate
+        secretName: "etcd-ca-cert"
+        # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+        filename: "ca.crt"
+      # Optional ETCD targets for vanilla clusters
+      targets:
+        - "https://etcd-0.example.com:2379"
+        - "https://etcd-1.example.com:2379"
+    
+    # REST client configuration
+    restClient:
+      # List of hosts allowed for REST client connections
+      hostAllowlist:
+        - "api.example.com"
+        - "monitoring.example.com"
+      # CA configuration for control plane
+      ca:
+        # Path where the CA should be mounted
+        mountPath: "/etc/instana/rest-ca"
+        # Kubernetes Secret name containing the CA certificate
+        secretName: "rest-ca-cert"
+        # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+        filename: "ca.crt"
+```
 
 ## References
 

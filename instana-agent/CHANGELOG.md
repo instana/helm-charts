@@ -1,6 +1,12 @@
 ## Changelog
 
-### 2.0.33
+### 2.0.35
+
+* Bump operator to v2.2.2: Fix incorrect handling of k8s_sensor.deployment.enabled setting
+* Bump operator to v2.2.1: Implement secure TLS and token authentication for k8sensor control-plane metrics
+* Add support for ETCD and RestClient configurations in the k8s_sensor section
+
+### 2.0.34
 
 * Bump operator to v2.2.0: Dependency updates for helm, go v1.25.3 and other go dependencies, remove /var/lib mount in agent pods
 

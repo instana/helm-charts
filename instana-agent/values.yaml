@@ -251,7 +251,7 @@ zone:
 # tag: latest
 # k8s_sensor.image.pullPolicy specifies when to pull the image container.
 # pullPolicy: Always
-# deployment:
+#   deployment:
 # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
 # enabled: true
 # Use three replicas to ensure the HA by the default.
@@ -284,9 +284,44 @@ zone:
 #     topologyKey: "kubernetes.io/hostname"
 # The minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available
 #   minReadySeconds: 0
-# podDisruptionBudget:
+#   podDisruptionBudget:
 # Specifies whether or not to setup a pod disruption budget for the k8sensor deployment
 # enabled: false
+
+# ETCD configuration for secure scraping
+# etcd:
+# Whether to use insecure connection to ETCD (default: false)
+# insecure: false
+
+# CA configuration for ETCD
+# ca:
+# Path where the CA should be mounted
+# mountPath: "/etc/instana/etcd-ca"
+# Kubernetes Secret name containing the CA certificate
+# secretName: "etcd-ca-cert"
+# Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+# filename: "ca.crt"
+
+# Optional ETCD targets for vanilla clusters
+# targets:
+#   - "https://etcd-0.example.com:2379"
+#   - "https://etcd-1.example.com:2379"
+
+# REST client configuration
+# restClient:
+# List of hosts allowed for REST client connections
+# hostAllowlist:
+#   - "api.example.com"
+#   - "monitoring.example.com"
+
+# CA configuration for control plane
+# ca:
+# Path where the CA should be mounted
+# mountPath: "/etc/instana/rest-ca"
+# Kubernetes Secret name containing the CA certificate
+# secretName: "rest-ca-cert"
+# Name of the file containing the CA Certificate (key in the Kubernetes Secret)
+# filename: "ca.crt"
 
 # zones:
 #  # Configure use of zones to use tolerations as the basis to associate a specific daemonset per tainted node pool
@@ -309,7 +344,7 @@ controllerManager:
     # controllerManager.image.digest is the digest (a.k.a. Image ID) of the agent container image; if specified, it has priority over agent.image.tag, which will be ignored.
     # digest:
     # controllerManager.image.tag is the tag name of the agent container image; if agent.image.digest is specified, this property is ignored.
-    tag: 2.2.0
+    tag: 2.2.2
     # controllerManager.image.pullPolicy specifies when to pull the image container.
     pullPolicy: Always
     # controllerManager.image.pullSecrets allows you to override the default pull secret that is created when agent.image.name starts with "containers.instana.io"
