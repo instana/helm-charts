@@ -1,5 +1,14 @@
 ## Changelog
 
+### 2.0.36
+
+* Bump operator to v2.2.3:
+    * Add pollrate configuration in the k8s_sensor section
+    * Multiple Go libraries and dependencies are updated
+    * Harden owner reference handling of the CR
+    * Adjust remote agent DNSPolicy to DNSClusterFirstWithHostNet
+    * Fix `useSecretMounts=true` handling when multi-backend are enabled
+
 ### 2.0.35
 
 * Bump operator to v2.2.2: Fix incorrect handling of k8s_sensor.deployment.enabled setting

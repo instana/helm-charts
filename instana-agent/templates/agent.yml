@@ -302,7 +302,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.k8s_sensor }}
-{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget .Values.k8s_sensor.etcd .Values.k8s_sensor.restClient }}
+{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget .Values.k8s_sensor.etcd .Values.k8s_sensor.restClient .Values.k8s_sensor.pollrate }}
   k8s_sensor:
 {{- if .Values.k8s_sensor.image }}
     image:
@@ -318,6 +318,9 @@ spec:
 {{- if .Values.k8s_sensor.image.pullPolicy }}
       pullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
 {{- end }}
+{{- end }}
+{{- if .Values.k8s_sensor.pollrate }}
+    pollrate: {{ .Values.k8s_sensor.pollrate | quote }}
 {{- end }}
 {{- if .Values.k8s_sensor.deployment }}
     deployment:
