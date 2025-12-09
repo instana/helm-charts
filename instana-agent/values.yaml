@@ -1,6 +1,10 @@
 # name is the value which will be used as the base resource name for various resources associated with the agent.
 # name: instana-agent
 
+# useSecretMounts controls whether secrets are mounted as files (true) or exposed as environment variables (false)
+# Default is true. Set to false to use environment variables for secrets instead of file mounts
+# useSecretMounts: true
+
 agent:
   # agent.mode is used to set agent mode and it can be APM, INFRASTRUCTURE or AWS
   # mode: APM
@@ -209,6 +213,11 @@ cluster:
 # Specifies whether RBAC resources should be created
 # create: true
 
+# service:
+# Specifies whether to create the instana-agent service to expose within the cluster the Prometheus remote-write, OpenTelemetry GRCP endpoint and other APIs
+# Note: Requires Kubernetes 1.17+, as it uses topologyKeys
+# create: true
+
 # opentelemetry:
 # enabled: false # legacy setting, will only enable grpc, defaults to false
 # grpc:
@@ -259,6 +268,8 @@ zone:
 # enabled: true
 # Use three replicas to ensure the HA by the default.
 # replicas: 3
+# The minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available
+# minReadySeconds: 0
 # k8s_sensor.deployment.pod adjusts the resource assignments for the agent independently of the DaemonSet agent when k8s_sensor.deployment.enabled=true
 # pod:
 # requests:
@@ -271,6 +282,14 @@ zone:
 # memory: 2048Mi
 # k8s_sensor.deployment.pod.limits.cpu sets the CPU units allocation limits for the agent pods.
 # cpu: 500m
+# k8s_sensor.deployment.pod.tolerations are tolerations to influence k8s sensor pod assignment.
+# https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# tolerations: []
+# k8s_sensor.deployment.pod.nodeSelector allows you to constrain k8s sensor pods to nodes with specific labels
+# nodeSelector: {}
+# k8s_sensor.deployment.pod.priorityClassName is the name of an existing PriorityClass that should be set on the k8s sensor pods
+# https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+# priorityClassName: null
 # affinity:
 # podAntiAffinity:
 # Soft anti-affinity policy: try not to schedule multiple kubernetes-sensor pods on the same node.
@@ -347,7 +366,7 @@ controllerManager:
     # controllerManager.image.digest is the digest (a.k.a. Image ID) of the agent container image; if specified, it has priority over agent.image.tag, which will be ignored.
     # digest:
     # controllerManager.image.tag is the tag name of the agent container image; if agent.image.digest is specified, this property is ignored.
-    tag: 2.2.3
+    tag: 2.2.4
     # controllerManager.image.pullPolicy specifies when to pull the image container.
     pullPolicy: Always
     # controllerManager.image.pullSecrets allows you to override the default pull secret that is created when agent.image.name starts with "containers.instana.io"

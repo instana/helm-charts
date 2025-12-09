@@ -1,5 +1,13 @@
 ## Changelog
 
+### 2.0.37
+
+* Bump operator to v2.2.4:
+    * Extended sample config with missing values
+    * Multiple Go libraries and dependencies are updated, including go 1.25.5
+    * Fix etcd client certificates
+    * Change ETCD metrics port for OCP
+
 ### 2.0.36
 
 * Bump operator to v2.2.3:
