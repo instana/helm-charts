@@ -1,5 +1,19 @@
 ## Changelog
 
+### 2.0.39
+
+* Bump operator to v2.2.6:
+    * Add support for k8sensor CRD monitoring feature flag (`k8s_sensor.featureFlags.crdMonitoring`)
+    * Add support for agent pod liveness probe configuration (`agent.pod.livenessProbe`)
+    * Multiple Go libraries and dependencies are updated
+
+### 2.0.38
+
+* Bump operator to v2.2.5:
+    * Fix to prevent k8sensor pod failure when OpenShift ETCD resources are missing
+    * Add new ClusterRole for k8sensor to allow CRD monitoring
+    * Multiple Go libraries and dependencies are updated
+
 ### 2.0.37
 
 * Bump operator to v2.2.4:

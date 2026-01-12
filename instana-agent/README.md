@@ -163,6 +163,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `agent.pod.volumes`                                | Custom volumes of the agent pod, see https://kubernetes.io/docs/concepts/storage/volumes/                                                                                                                                                                                                                                                                                            | `[]`                                                                                                                                    |
 | `agent.pod.volumeMounts`                           | Custom volume mounts of the agent pod, see https://kubernetes.io/docs/concepts/storage/volumes/                                                                                                                                                                                                                                                                                            | `[]`                                                                                                                                    |
 | `agent.pod.env`                                         | Additional environment variables for the agent using the Kubernetes syntax. See example below.                                                                                                                                                                                                                                                                         | `{}`                                                                                                                                    |
+| `agent.pod.livenessProbe`                               | Override the default liveness probe settings for the agent container. Allows customization of `initialDelaySeconds`, `timeoutSeconds`, `periodSeconds`, and `failureThreshold`. See [Liveness Probe Configuration](#liveness-probe-configuration) for more details.                                                                                                      | Default: `initialDelaySeconds: 600`, `timeoutSeconds: 5`, `periodSeconds: 10`, `failureThreshold: 6`                                   |
 | `agent.serviceMesh.enabled`                         | Activate Instana Agent JVM monitoring service mesh support for Istio or OpenShift ServiceMesh                                                                                                                                                                                                                          | `true`                                                                                                                                  |
 | `agent.env`                                         | Additional environment variables for the agent                                                                                                                                                                                                                                                                         | `{}`                                                                                                                                    |
 | `agent.redactKubernetesSecrets`                     | Enable additional secrets redaction for selected Kubernetes resources                                                                                                                                                                                                                                                  | `nil` See [Kubernetes secrets](https://docs.instana.io/setup_and_manage/host_agent/on/kubernetes/#secrets) for more details.            |
@@ -181,6 +182,7 @@ The following table lists the configurable parameters of the Instana chart and t
 | `k8s_sensor.etcd.ca.secretName`                     | Kubernetes Secret name containing the CA certificate for ETCD                                                                                                                                                                                                                                                          | `nil`                                                                                                                                   |
 | `k8s_sensor.etcd.ca.filename`                       | Name of the file containing the CA Certificate for ETCD (key in the Kubernetes Secret)                                                                                                                                                                                                                                 | `nil`                                                                                                                                   |
 | `k8s_sensor.etcd.targets`                           | Optional ETCD targets for vanilla clusters                                                                                                                                                                                                                                                                             | `nil`                                                                                                                                   |
+| `k8s_sensor.featureFlags.crdMonitoring`             | Enable or disable Custom Resource Definition (CRD) monitoring in the k8sensor. When enabled, the k8sensor will monitor and report on CRDs in the cluster.                                                                                                                                                              | `false`                                                                                                                                 |
 | `k8s_sensor.restClient.hostAllowlist`               | List of hosts allowed for REST client connections                                                                                                                                                                                                                                                                      | `nil`                                                                                                                                   |
 | `k8s_sensor.restClient.ca.mountPath`                | Path where the CA should be mounted for REST client                                                                                                                                                                                                                                                                    | `nil`                                                                                                                                   |
 | `k8s_sensor.restClient.ca.secretName`               | Kubernetes Secret name containing the CA certificate for REST client                                                                                                                                                                                                                                                   | `nil`                                                                                                                                   |
@@ -798,6 +800,97 @@ spec:
         # Name of the file containing the CA Certificate (key in the Kubernetes Secret)
         filename: "ca.crt"
 ```
+### Liveness Probe Configuration
+
+The Instana Agent supports customization of the liveness probe settings for the agent container. This allows you to adjust health check parameters to match your environment's requirements.
+
+#### Default Settings
+
+By default, the agent uses the following liveness probe configuration:
+
+```yaml
+livenessProbe:
+  httpGet:
+    host: 127.0.0.1
+    path: /status
+    port: 42699
+  initialDelaySeconds: 600  # Wait 10 minutes before first check
+  timeoutSeconds: 5          # Allow 5 seconds for the probe to complete
+  periodSeconds: 10          # Check every 10 seconds
+  failureThreshold: 6        # Allow 6 consecutive failures before restart
+```
+
+#### Customizing Liveness Probe
+
+You can override these settings using the `agent.pod.livenessProbe` configuration in your values.yaml:
+
+```yaml
+agent:
+  pod:
+    livenessProbe:
+      httpGet:
+        host: 127.0.0.1
+        path: /status
+        port: 42699
+      initialDelaySeconds: 900  # Wait 15 minutes before first check
+      timeoutSeconds: 10         # Allow 10 seconds for the probe to complete
+      periodSeconds: 15          # Check every 15 seconds
+      failureThreshold: 5        # Allow 5 consecutive failures before restart
+```
+
+Or using Helm command line:
+
+```bash
+helm install instana-agent \
+  --namespace instana-agent \
+  --repo https://agents.instana.io/helm \
+  --set agent.key=INSTANA_AGENT_KEY \
+  --set agent.endpointHost=HOST \
+  --set zone.name=ZONE_NAME \
+  --set cluster.name="CLUSTER_NAME" \
+  --set agent.pod.livenessProbe.initialDelaySeconds=900 \
+  --set agent.pod.livenessProbe.timeoutSeconds=10 \
+  --set agent.pod.livenessProbe.periodSeconds=15 \
+  --set agent.pod.livenessProbe.failureThreshold=5 \
+  instana-agent
+```
+
+#### Configuration Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `httpGet.host` | The host to connect to for the health check | `127.0.0.1` |
+| `httpGet.path` | The path to request for the health check | `/status` |
+| `httpGet.port` | The port to connect to for the health check | `42699` |
+| `initialDelaySeconds` | Number of seconds after the container has started before liveness probes are initiated | `600` |
+| `timeoutSeconds` | Number of seconds after which the probe times out | `5` |
+| `periodSeconds` | How often (in seconds) to perform the probe | `10` |
+| `failureThreshold` | Number of consecutive failures before the container is restarted | `6` |
+
+#### Use Cases
+
+**High-Load Environments**: Increase `initialDelaySeconds` and `timeoutSeconds` to allow more time for the agent to start and respond:
+
+```yaml
+agent:
+  pod:
+    livenessProbe:
+      initialDelaySeconds: 900
+      timeoutSeconds: 10
+      failureThreshold: 5
+```
+
+**Fast Recovery**: Decrease `periodSeconds` and `failureThreshold` for quicker detection and recovery:
+
+```yaml
+agent:
+  pod:
+    livenessProbe:
+      periodSeconds: 5
+      failureThreshold: 3
+```
+
+**Note**: The liveness probe configuration is optional. If not specified, the operator will use the default values.
 
 ## References
 

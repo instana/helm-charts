@@ -147,6 +147,22 @@ agent:
   #       key: config.json
   #       optional: true
 
+  # agent.pod.livenessProbe allows you to override the default liveness probe settings for the agent container
+  # Default values are:
+  #   initialDelaySeconds: 600 (10 minutes)
+  #   timeoutSeconds: 5
+  #   periodSeconds: 10
+  #   failureThreshold: 6
+  # livenessProbe:
+  #   httpGet:
+  #     host: 127.0.0.1
+  #     path: /status
+  #     port: 42699
+  #   initialDelaySeconds: 900  # Wait 15 minutes before first check
+  #   timeoutSeconds: 10         # Allow 10 seconds for the probe to complete
+  #   periodSeconds: 15          # Check every 15 seconds
+  #   failureThreshold: 5        # Allow 5 consecutive failures before restart
+
   # agent.proxyHost sets the INSTANA_AGENT_PROXY_HOST environment variable.
   # proxyHost: null
   # agent.proxyPort sets the INSTANA_AGENT_PROXY_PORT environment variable.
@@ -263,6 +279,11 @@ zone:
 
 #  pollrate: "10s"
 
+# featureFlags:
+# k8s_sensor.featureFlags.crdMonitoring enables or disables CRD monitoring feature in k8sensor
+# When enabled, k8sensor will monitor Custom Resource Definitions in the cluster
+# crdMonitoring: false
+
 #   deployment:
 # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
 # enabled: true
@@ -366,7 +387,7 @@ controllerManager:
     # controllerManager.image.digest is the digest (a.k.a. Image ID) of the agent container image; if specified, it has priority over agent.image.tag, which will be ignored.
     # digest:
     # controllerManager.image.tag is the tag name of the agent container image; if agent.image.digest is specified, this property is ignored.
-    tag: 2.2.4
+    tag: 2.2.6
     # controllerManager.image.pullPolicy specifies when to pull the image container.
     pullPolicy: Always
     # controllerManager.image.pullSecrets allows you to override the default pull secret that is created when agent.image.name starts with "containers.instana.io"

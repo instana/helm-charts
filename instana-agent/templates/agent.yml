@@ -131,7 +131,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.agent.pod }}
-{{- if or .Values.agent.pod.annotations .Values.agent.pod.labels .Values.agent.pod.tolerations .Values.agent.pod.affinity .Values.agent.pod.priorityClassName .Values.agent.pod.requests .Values.agent.pod.limits .Values.agent.pod.nodeSelector .Values.agent.pod.volumeMounts .Values.agent.pod.mounts .Values.agent.pod.env}}
+{{- if or .Values.agent.pod.annotations .Values.agent.pod.labels .Values.agent.pod.tolerations .Values.agent.pod.affinity .Values.agent.pod.priorityClassName .Values.agent.pod.requests .Values.agent.pod.limits .Values.agent.pod.nodeSelector .Values.agent.pod.volumeMounts .Values.agent.pod.mounts .Values.agent.pod.env .Values.agent.pod.livenessProbe}}
     pod:
     {{- if .Values.agent.pod.annotations }}
       annotations:
@@ -189,6 +189,10 @@ spec:
     {{- if .Values.agent.pod.env }}
       env:
       {{- toYaml $.Values.agent.pod.env | nindent 8 }}
+    {{- end }}
+    {{- if .Values.agent.pod.livenessProbe }}
+      livenessProbe:
+      {{- toYaml $.Values.agent.pod.livenessProbe | nindent 8 }}
     {{- end }}
 {{- end }}
 {{- end }}
@@ -302,7 +306,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- if .Values.k8s_sensor }}
-{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget .Values.k8s_sensor.etcd .Values.k8s_sensor.restClient .Values.k8s_sensor.pollrate }}
+{{- if or .Values.k8s_sensor.image .Values.k8s_sensor.deployment .Values.k8s_sensor.podDisruptionBudget .Values.k8s_sensor.etcd .Values.k8s_sensor.restClient .Values.k8s_sensor.pollrate .Values.k8s_sensor.featureFlags }}
   k8s_sensor:
 {{- if .Values.k8s_sensor.image }}
     image:
@@ -318,6 +322,12 @@ spec:
 {{- if .Values.k8s_sensor.image.pullPolicy }}
       pullPolicy: {{ .Values.k8s_sensor.image.pullPolicy }}
 {{- end }}
+{{- end }}
+{{- if .Values.k8s_sensor.featureFlags }}
+    featureFlags:
+    {{- if hasKey .Values.k8s_sensor.featureFlags "crdMonitoring" }}
+      crdMonitoring: {{ .Values.k8s_sensor.featureFlags.crdMonitoring }}
+    {{- end }}
 {{- end }}
 {{- if .Values.k8s_sensor.pollrate }}
     pollrate: {{ .Values.k8s_sensor.pollrate | quote }}
