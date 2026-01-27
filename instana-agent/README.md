@@ -293,11 +293,11 @@ _Note:_ There is no hard limitation on the number of backends an Instana agent c
 If your infrastructure uses a proxy, you should ensure that you set values for:
 
 * `agent.proxyHost`
-* `agent.pod.proxyPort`
-* `agent.pod.proxyProtocol`
-* `agent.pod.proxyUser`
-* `agent.pod.proxyPassword`
-* `agent.pod.proxyUseDNS`
+* `agent.proxyPort`
+* `agent.proxyProtocol`
+* `agent.proxyUser`
+* `agent.proxyPassword`
+* `agent.proxyUseDNS`
 
 #### Same Proxy for Repository and the Instana backend
 
