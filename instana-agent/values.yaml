@@ -279,11 +279,6 @@ zone:
 
 #  pollrate: "10s"
 
-# featureFlags:
-# k8s_sensor.featureFlags.crdMonitoring enables or disables CRD monitoring feature in k8sensor
-# When enabled, k8sensor will monitor Custom Resource Definitions in the cluster
-# crdMonitoring: false
-
 #   deployment:
 # Specifies whether or not to enable the Deployment and turn off the Kubernetes sensor in the DaemonSet
 # enabled: true
@@ -403,3 +398,7 @@ controllerManager:
   #   requests:
   #     cpu: 200m
   #     memory: 200Mi
+  pod:
+# controllerManager.pod.tolerations are tolerations to influence controller manager pod assignment.
+#   https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# tolerations: []

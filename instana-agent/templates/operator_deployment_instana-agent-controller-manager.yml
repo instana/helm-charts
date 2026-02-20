@@ -76,6 +76,14 @@ spec:
                       - ppc64le
                       - s390x
                       - arm64
+      {{- if .Values.controllerManager }}
+        {{- if .Values.controllerManager.pod }}
+          {{- if .Values.controllerManager.pod.tolerations }}
+      tolerations:
+        {{- toYaml .Values.controllerManager.pod.tolerations | nindent 8 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       containers:
         - args:
             - --leader-elect

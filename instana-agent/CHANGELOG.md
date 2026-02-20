@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.0.40
+
+* Bump operator to v2.2.7:
+    * Deprecate k8sensor CRD monitoring feature flag (`k8s_sensor.featureFlags.crdMonitoring`) its value is disregarded.
+    * Add controller-manager toleration support via the flag `controllerManager.pod.tolerations`.
+
 ### 2.0.39
 
 * Bump operator to v2.2.6:
