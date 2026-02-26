@@ -1,5 +1,13 @@
 ## Changelog
 
+### 2.0.41
+
+* Bump operator to v2.2.8:
+    * Multiple Go libraries and dependencies are updated
+    * Update Go to v1.26.0
+    * Pipeline refactorings
+    * Use latest ubi9 image
+
 ### 2.0.40
 
 * Bump operator to v2.2.7:
