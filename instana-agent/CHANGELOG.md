@@ -1,5 +1,13 @@
 ## Changelog
 
+### 2.0.42
+
+* Bump operator to v2.2.9:
+    * RBAC cleanup and improvements
+    * Allow k8sensor to read discovery.k8s.io resources
+    * Add `INSTANA_PERSIST_HOST_UNIQUE_ID` env var to fresh agent installations
+    * Multiple Go libraries and dependencies are updated, including Go 1.26.1
+
 ### 2.0.41
 
 * Bump operator to v2.2.8:
