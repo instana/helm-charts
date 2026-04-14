@@ -1,5 +1,12 @@
 ## Changelog
 
+### 2.0.43
+
+* Bump operator to v2.2.10:
+    * Fix for k8sensor to align port name in K3s etcd-metrics service
+    * Pipeline and code refactorings
+    * Multiple Go libraries and dependencies are updated, including Go 1.26.2
+
 ### 2.0.42
 
 * Bump operator to v2.2.9:
