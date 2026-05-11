@@ -1,5 +1,17 @@
 ## Changelog
 
+### 2.0.44
+
+* Fix leader election when deploying to custom namespaces:
+    * Add missing `POD_NAMESPACE` environment variable to controller manager deployment
+    * Convert leader election RBAC from ClusterRole/ClusterRoleBinding to namespace-scoped Role/RoleBinding
+* Bump operator to v2.2.12:
+    * Fix for k8sensor status to skip condition when deployment is disabled
+* Bump operator to v2.2.11:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated.
+    * Added `NODE_NAME` environment variable to agent pods.
+    * Optimized controller memory consumption with namespace-scoped cache.
+
 ### 2.0.43
 
 * Bump operator to v2.2.10:

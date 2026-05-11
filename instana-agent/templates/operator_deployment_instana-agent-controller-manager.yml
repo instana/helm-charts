@@ -89,15 +89,20 @@ spec:
             - --leader-elect
           command:
             - /manager
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           {{- if .Values.controllerManager }}
             {{- if .Values.controllerManager.image }}
           image: {{ include "image" $.Values.controllerManager.image | quote }}
           imagePullPolicy: {{ $.Values.controllerManager.image.pullPolicy | default "Always" }}
             {{- else }}
-          image: icr.io/instana/instana-agent-operator:2.2.10
+          image: icr.io/instana/instana-agent-operator:2.2.12
             {{- end }}
           {{- else }}
-          image: icr.io/instana/instana-agent-operator:2.2.10
+          image: icr.io/instana/instana-agent-operator:2.2.12
           {{- end }}
           livenessProbe:
             httpGet:
