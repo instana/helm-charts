@@ -1,5 +1,14 @@
 ## Changelog
 
+### 2.0.45
+
+* Bump operator to v2.2.14:
+    * Add operator version label to deployment manifests for better tracking
+    * Filter PodSecurity warnings from operator logs to reduce noise
+    * Multiple Go libraries and Kubernetes-related dependencies are updated, including Go 1.26.4
+* Bump operator to v2.2.13:
+    * Improved cache configuration with label-based filtering
+
 ### 2.0.44
 
 * Fix leader election when deploying to custom namespaces:
