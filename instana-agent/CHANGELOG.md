@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.0.46
+
+* Add `app.kubernetes.io/operator-version` label to controller-manager deployment to simplify version mapping between operator and helm chart
+* Multiple pipeline dependencies are updated, including Go 1.26.4 and helm v4.2.0
+
 ### 2.0.45
 
 * Bump operator to v2.2.14:

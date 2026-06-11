@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   labels:
     {{- include "instana-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/operator-version: "2.2.14"
   name: instana-agent-controller-manager
 spec:
   replicas: 1
@@ -15,6 +16,7 @@ spec:
       {{- $existing.spec.selector.matchLabels | toYaml | nindent 6 }}
       {{- else }}
       # For new installations, use the default selector labels
+      # NOTE: app.kubernetes.io/operator-version is NOT included in selector (immutable field)
       app.kubernetes.io/name: instana-agent-operator
       {{- end }}
   template:
@@ -35,9 +37,11 @@ spec:
         # Use existing selector labels from the deployment in the cluster for the pod template
         {{- $existing.spec.selector.matchLabels | toYaml | nindent 8 }}
         # Additional labels can be added here that aren't part of the selector
+        app.kubernetes.io/operator-version: "2.2.14"
         {{- else }}
         # For new installations, use the complete set of labels
         {{- include "instana-agent.labels" . | nindent 8 }}
+        app.kubernetes.io/operator-version: "2.2.14"
         {{- end }}
         {{- if .Values.agent }}
           {{- if .Values.agent.pod }}
