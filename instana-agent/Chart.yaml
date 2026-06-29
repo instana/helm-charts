@@ -5,7 +5,7 @@ annotations:
     - name: Instana Helm charts
       url: https://github.com/instana/helm-charts
 apiVersion: v2
-appVersion: 1.292.0
+appVersion: 2.2.15
 description: Instana Agent for Kubernetes
 home: https://www.instana.com/
 icon: https://agents.instana.io/helm/stan-logo-2020.png
@@ -31,4 +31,4 @@ maintainers:
 name: instana-agent
 sources:
 - https://github.com/instana/helm-charts
-version: 2.0.46
+version: 2.0.47

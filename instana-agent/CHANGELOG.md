@@ -1,5 +1,12 @@
 ## Changelog
 
+### 2.0.47
+
+* Chart `appVersion` is now derived dynamically from the operator release manifest (`app.kubernetes.io/operator-version` label) during the build step, replacing the previously manually maintained `versions/INSTANA_AGENT_APP_VERSION` file. The displayed version in `helm ls` now always reflects the actual bundled operator version.
+* Bump operator to v2.2.15:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated.
+    * Documentation is added for OpenShift internal registry and air-gap deployments.
+
 ### 2.0.46
 
 * Add `app.kubernetes.io/operator-version` label to controller-manager deployment to simplify version mapping between operator and helm chart
