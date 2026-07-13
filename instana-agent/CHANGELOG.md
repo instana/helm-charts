@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.0.48
+
+* Bump operator to v2.2.16:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated, including Go 1.26.5
+    * Documentation is added for controlplane metrics.
+
 ### 2.0.47
 
 * Chart `appVersion` is now derived dynamically from the operator release manifest (`app.kubernetes.io/operator-version` label) during the build step, replacing the previously manually maintained `versions/INSTANA_AGENT_APP_VERSION` file. The displayed version in `helm ls` now always reflects the actual bundled operator version.
