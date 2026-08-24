@@ -1,5 +1,13 @@
 ## Changelog
 
+### 2.0.49
+
+* Bump operator to v2.2.17:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated
+    * Stop the k8sensor etcd-reader RBAC churn in kube-system
+    * Let a CR configured ETCD CA win over the discovered one
+    * Stop setting the ETCD env vars the k8sensor does not read
+
 ### 2.0.48
 
 * Bump operator to v2.2.16:

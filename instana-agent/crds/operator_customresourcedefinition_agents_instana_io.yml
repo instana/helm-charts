@@ -4479,7 +4479,10 @@ spec:
                           description: 'Whether to use insecure connection to ETCD (default: false)'
                           type: boolean
                         targets:
-                          description: Optional ETCD targets for vanilla clusters
+                          description: |-
+                            Targets is DEPRECATED and ignored, kept for backwards compatibility.
+                            The k8sensor discovers the ETCD endpoints itself and never read the
+                            ETCD_TARGETS environment variable that this field used to set.
                           items:
                             type: string
                           type: array
