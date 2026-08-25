@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.0.50
+* Bump operator to v2.2.18:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated
+    * Fix to stop copying ETCD resources if the target namespace is not the operator's namespace.
+    * Fix to prevent name collisions on cluster-scoped RBAC artifacts if multiple agent CRs are deployed
+
 ### 2.0.49
 
 * Bump operator to v2.2.17:
