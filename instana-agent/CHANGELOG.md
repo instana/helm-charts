@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.0.51
+* Bump operator to v2.2.19:
+    * Multiple Go libraries and Kubernetes-related dependencies are updated
+    * Add RunAsNonRoot and RunAsUser to k8sensor deployment
+
 ### 2.0.50
 * Bump operator to v2.2.18:
     * Multiple Go libraries and Kubernetes-related dependencies are updated
