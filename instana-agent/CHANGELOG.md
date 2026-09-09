@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.52
+* Bump operator to v2.2.20:
+    * Multiple Go runtime and libraries and Kubernetes-related dependencies are updated
+
 ### 2.0.51
 * Bump operator to v2.2.19:
     * Multiple Go libraries and Kubernetes-related dependencies are updated
