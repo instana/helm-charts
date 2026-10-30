@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.22.0
+    controller-gen.kubebuilder.io/version: v0.23.0
   name: agents.instana.io
 spec:
   group: instana.io
@@ -4644,9 +4644,12 @@ spec:
                       type: object
                     pollrate:
                       description: |-
+                        Deprecated: set com.instana.plugin.kubernetes.poll_rate in configuration_yaml instead. When both are set and
+                        differ, configuration_yaml wins and the K8sSensorPollRateConflict condition is set.
                         PollRate controls the frequency at which k8sensor sends collected information to the backend.
-                        PollRate value should be provided in seconds
-                        Example: 1s, 5s, 10s, 30s
+                        PollRate value should be provided in seconds. k8sensor adjusts it to a value it supports: older k8sensor
+                        versions allow 1s to 30s, newer ones 1s to 60s. When neither is set, 10s is used.
+                        Example: 1s, 5s, 10s, 30s, 60s
                       pattern: ^[0-9]+s$
                       type: string
                     restClient:

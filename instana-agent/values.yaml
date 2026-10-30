@@ -209,6 +209,13 @@ agent:
     #  tags:
     #    - 'dev'
     #    - 'app1'
+
+    # Kubernetes sensor (k8sensor) poll rate
+    # How often k8sensor sends data to the backend, in seconds. Allowed values: 1, 5, 10, 20, 30, 60
+    # (default 10). Other values snap to the nearest allowed value; older k8sensor versions allow
+    # 1 to 30. Takes precedence over k8s_sensor.pollrate. Changing it restarts the k8sensor pods.
+    #com.instana.plugin.kubernetes:
+    #  poll_rate: 30
   # agent.redactKubernetesSecrets sets the INSTANA_KUBERNETES_REDACT_SECRETS environment variable.
   # redactKubernetesSecrets: null
 
@@ -277,6 +284,8 @@ zone:
 # k8s_sensor.image.pullPolicy specifies when to pull the image container.
 # pullPolicy: Always
 
+# k8s_sensor.pollrate is deprecated: set com.instana.plugin.kubernetes.poll_rate in agent.configuration_yaml instead (see the example there).
+# When both are set and differ, agent.configuration_yaml wins and the operator sets the K8sSensorPollRateConflict condition on the InstanaAgent.
 #  pollrate: "10s"
 
 #   deployment:
@@ -382,7 +391,7 @@ controllerManager:
     # controllerManager.image.digest is the digest (a.k.a. Image ID) of the agent container image; if specified, it has priority over agent.image.tag, which will be ignored.
     # digest:
     # controllerManager.image.tag is the tag name of the agent container image; if agent.image.digest is specified, this property is ignored.
-    tag: 2.2.22
+    tag: 2.2.23
     # controllerManager.image.pullPolicy specifies when to pull the image container.
     pullPolicy: Always
     # controllerManager.image.pullSecrets allows you to override the default pull secret that is created when agent.image.name starts with "containers.instana.io"

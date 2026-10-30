@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.0.55
+* Deprecate `k8s_sensor.pollrate` in favour of `com.instana.plugin.kubernetes.poll_rate` in `agent.configuration_yaml`, which wins when both are set. `values.yaml` documents the allowed values (1, 5, 10, 20, 30 and 60 seconds).
+* Bump operator to v2.2.23:
+   * Multiple Go runtime and libraries and Kubernetes-related dependencies are updated
+   * Resolve the k8sensor poll rate from configuration_yaml defined in the CR
+
 ### 2.0.54
 * Bump operator to v2.2.22:
     * Multiple Go runtime and libraries and Kubernetes-related dependencies are updated
